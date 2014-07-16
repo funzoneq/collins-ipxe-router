@@ -3,6 +3,8 @@ collins-ipxe-router
 
 A simple iPXE router based on collins data
 
+# Example dhcpd.conf
+
 ```
 subnet 192.168.1.0 netmask 255.255.255.0 {
   option domain-name        "example.com";

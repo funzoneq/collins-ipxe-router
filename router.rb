@@ -2,7 +2,6 @@ require 'sinatra'
 require 'collins_auth'
 require 'uri'
 require 'yaml'
-require 'pp'
 
 def provision? (asset)
   asset.status == "Provisioning"
@@ -13,14 +12,10 @@ def testing? (asset)
 end
 
 get '/pxe/:mac' do
-  vars = {}
-  mac = URI.unescape(params[:mac])
-  vars = YAML.load_file 'config.yml'
-  
-  client = Collins::Authenticator.setup_client
-  results = client.find({:mac_address => mac, :details => true, :size => 1})
-  
-  asset = results.first
+  mac       = URI.unescape(params[:mac])
+  vars      = YAML.load_file 'config.yml'
+  client    = Collins::Authenticator.setup_client
+  asset     = client.find({:mac_address => mac, :details => true, :size => 1}).first
   
   case
   when asset.nil?
@@ -34,4 +29,13 @@ get '/pxe/:mac' do
   end
   
   erb :ipxe, :locals => vars, :content_type => 'text/plain;charset=utf-8'
+end
+
+get '/kickstart/:mac' do
+  mac       = URI.unescape(params[:mac])
+  vars      = YAML.load_file 'config.yml'
+  client    = Collins::Authenticator.setup_client
+  asset     = client.find({:mac_address => mac, :details => true, :size => 1}).first
+  
+  erb :kickstart, :locals => vars, :content_type => 'text/plain;charset=utf-8'
 end

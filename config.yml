@@ -3,3 +3,6 @@
 :playbook: playbook.yml
 :kickstart: http://192.168.1.1/ks/centos6.ks
 :image_server: http://192.168.1.1/mirror
+:ubuntu_mirror: http://mirror.nl.leaseweb.net/ubuntu/
+:initial_user: blendle
+:initial_pass: root4me2

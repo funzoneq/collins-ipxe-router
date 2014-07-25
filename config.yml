@@ -1,7 +1,7 @@
 ---
 :git_url: https://github.com/funzoneq/OnMyWay.git
 :playbook: playbook.yml
-:kickstart: http://192.168.1.1/ks/centos6.ks
+:baseurl: http://pxe.example.com
 :image_server: http://192.168.1.1/mirror
 :ubuntu_mirror: http://mirror.nl.leaseweb.net/ubuntu/
 :initial_user: blendle

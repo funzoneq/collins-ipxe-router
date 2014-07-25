@@ -25,8 +25,11 @@ user <%= initial_user %> --password <%= initial_pass %>
 #Reboot after installation
 reboot
 
-#Use text mode install
-text
+# Use cmdline mode install for more debugging than text
+cmdline
+
+# Do not configure the X Window System
+skipx
 
 #Install OS instead of upgrade
 install
@@ -49,7 +52,7 @@ part /boot --fstype ext4 --size 512 --asprimary
 auth  --useshadow  --enablemd5 
 
 #Network information
-network --bootproto=dhcp
+network --bootproto=dhcp --hostname=<%= asset.hostname %>
 
 #Firewall configuration
 firewall --disabled

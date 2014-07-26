@@ -31,13 +31,13 @@ subnet 192.168.1.0 netmask 255.255.255.0 {
   default-lease-time          21600;
   max-lease-time              43200;
   range                       192.168.1.21 192.168.1.254;
+  next-server                 192.168.1.5;    # tftp server
 
   # If a pxe request comes in from ipxe send the config url
   if exists user-class and option user-class = "iPXE" {
     filename "http://192.168.1.5:4567/pxe/${net0/mac}";
   # For all other pxe requests send ipxe
   } else {
-    next-server 192.168.1.5;    # tftp server
     filename "/undionly.kpxe";     # path to ipxe binary on tftp server
   }
 }
@@ -51,10 +51,17 @@ wget http://archive.ubuntu.com/ubuntu/dists/trusty-updates/main/installer-amd64/
 wget http://archive.ubuntu.com/ubuntu/dists/trusty-updates/main/installer-amd64/current/images/netboot/ubuntu-installer/amd64/linux
 ```
 
-## Example CentOS amd64 kickstart
+## Example CentOS x86_64 kickstart
 
 ```
 cd /usr/share/nginx/html/mirror/centos/
 wget http://mirror.centos.org/centos/7/os/x86_64/images/pxeboot/initrd.img
 wget http://mirror.centos.org/centos/7/os/x86_64/images/pxeboot/vmlinuz
+```
+
+## Example OnMyWay x86_64 setup
+
+```
+cd /usr/share/nginx/html/mirror/omw/
+wget http://vps.us.freshway.biz/OnMyWay/LATEST
 ```

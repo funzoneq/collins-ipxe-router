@@ -63,5 +63,5 @@ wget http://mirror.centos.org/centos/7/os/x86_64/images/pxeboot/vmlinuz
 
 ```
 cd /usr/share/nginx/html/mirror/omw/
-wget http://vps.us.freshway.biz/OnMyWay/LATEST
+wget http://vps.us.freshway.biz/OnMyWay/LATEST -O omw.iso
 ```

@@ -7,10 +7,12 @@ A simple iPXE router based on collins data
 ## Setup TFTP
 
 ```
-sudo yum -y install dhcp tftp-server
+sudo yum -y install dhcp tftp-server nginx
 sudo sed -i 's/disable\s*=\s*yes/disable = no/' /etc/xinetd.d/tftp
 cd /var/lib/tftpboot/
 sudo wget http://boot.ipxe.org/undionly.kpxe
+sudo mkdir -p /usr/share/nginx/html/mirror/
+sudo mkdir -p /usr/share/nginx/html/mirror/{omw,omw_test,centos,ubuntu}
 sudo vi /etc/dhcp/dhcpd.conf
 ```
 
@@ -39,4 +41,20 @@ subnet 192.168.1.0 netmask 255.255.255.0 {
     filename "/undionly.kpxe";     # path to ipxe binary on tftp server
   }
 }
+```
+
+## Example Ubuntu amd64 kickstart
+
+```
+cd /usr/share/nginx/html/mirror/ubuntu/
+wget http://archive.ubuntu.com/ubuntu/dists/trusty-updates/main/installer-amd64/current/images/netboot/ubuntu-installer/amd64/initrd.gz
+wget http://archive.ubuntu.com/ubuntu/dists/trusty-updates/main/installer-amd64/current/images/netboot/ubuntu-installer/amd64/linux
+```
+
+## Example CentOS amd64 kickstart
+
+```
+cd /usr/share/nginx/html/mirror/centos/
+wget http://mirror.centos.org/centos/7/os/x86_64/images/pxeboot/initrd.img
+wget http://mirror.centos.org/centos/7/os/x86_64/images/pxeboot/vmlinuz
 ```

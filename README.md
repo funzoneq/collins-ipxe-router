@@ -23,6 +23,7 @@ allow booting;
 allow bootp;
 option option-128 code 128 = string;
 option option-129 code 129 = text;
+option ipxe.http      code 19 = unsigned integer 8;
 
 subnet 192.168.1.0 netmask 255.255.255.0 {
   option domain-name          "example.com";
@@ -33,7 +34,7 @@ subnet 192.168.1.0 netmask 255.255.255.0 {
   range                       192.168.1.21 192.168.1.254;
 
   # If a pxe request comes in from ipxe send the config url
-  if exists user-class and option user-class = "iPXE" {
+  if exists ipxe.http {
     filename "http://192.168.1.5:4567/pxe/${net0/mac}";
   # For all other pxe requests send ipxe
   } else {

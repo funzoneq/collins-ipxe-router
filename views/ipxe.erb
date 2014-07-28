@@ -28,7 +28,7 @@ goto finish
 
 :provision
 initrd <%= image_server %>/centos/x86_64/initrd.img
-kernel <%= image_server %>/centos/x86_64/vmlinuz ks=<%= baseurl %>/kickstart/${mac} ip=dhcp ksdevice=${mac} ramdisk_size=100000
+kernel <%= image_server %>/centos/x86_64/vmlinuz ks=<%= baseurl %>/kickstart/${mac} ip=dhcp ksdevice=${mac} ramdisk_size=100000 console=tty0 console=ttyS1,115200
 goto finish
 
 # Avoid redownloading initrd and kernel repeatedly

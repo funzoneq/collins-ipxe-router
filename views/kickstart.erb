@@ -20,7 +20,7 @@ timezone Etc/UTC
 rootpw --disabled
 
 #Initial user (user with sudo capabilities) 
-user <%= initial_user %> --password <%= initial_pass %>
+user <%= initial_user %> --fullname "<%= initial_fullname %>" --password <%= initial_pass %>
 
 #Reboot after installation
 reboot

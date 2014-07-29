@@ -9,7 +9,7 @@ menu Collins iPXE Router 1.0.1
 item --key 0 local 0: Local Boot - Boot the hard drive
 item --key 1 intake 1: Intake - Register with Collins and run machine setup
 item --key 2 testing 2: Intake testing - Test the new version of On My Way
-item --key 3 provision 3: Provision - Install CentOS 6
+item --key 3 provision 3: Provision - Install Ubuntu 14.04
 
 choose --default <%= action %> --timeout 10000 target && goto ${target}
 
@@ -18,18 +18,18 @@ sanboot --no-describe --drive 0x80 || goto router_menu
 
 :intake
 initrd <%= image_server %>/omw/initrd0.img
-kernel <%= image_server %>/omw/vmlinuz0 rootflags=loop rootflags=loop root=live:/omw.iso rootfstype=auto ro liveimg SCRIPT_CMD=/usr/bin/getstarted GITURL=<%= git_url %> playbook=<%= playbook %> rd_NO_LUKS rd_NO_MD rd_NO_DM console=tty0 console=ttyS1,115200
-goto finish
+kernel <%= image_server %>/omw/vmlinuz0 SCRIPT_CMD=/usr/bin/getstarted GITURL=<%= git_url %> playbook=<%= playbook %> rootflags=loop root=live:/omw.iso rootfstype=auto ro liveimg rd_NO_LUKS rd_NO_MD rd_NO_DM console=tty0 console=ttyS1,115200
+boot
 
 :testing
 initrd <%= image_server %>/omw_test/initrd0.img
-kernel <%= image_server %>/omw_test/vmlinuz0 rootflags=loop rootflags=loop root=live:/omw.iso rootfstype=auto ro liveimg SCRIPT_CMD=/usr/bin/getstarted GITURL=<%= git_url %> playbook=<%= playbook %> rd_NO_LUKS rd_NO_MD rd_NO_DM console=tty0 console=ttyS1,115200
-goto finish
+kernel <%= image_server %>/omw_test/vmlinuz0 SCRIPT_CMD=/usr/bin/getstarted GITURL=<%= git_url %> playbook=<%= playbook %> rootflags=loop root=live:/omw.iso rootfstype=auto ro liveimg rd_NO_LUKS rd_NO_MD rd_NO_DM console=tty0 console=ttyS1,115200
+boot
 
 :provision
-initrd <%= image_server %>/centos/x86_64/initrd.img
-kernel <%= image_server %>/centos/x86_64/vmlinuz ks=<%= baseurl %>/kickstart/${mac} ip=dhcp ksdevice=${mac} ramdisk_size=100000 console=tty0 console=ttyS1,115200
-goto finish
+initrd http://archive.ubuntu.com/ubuntu/dists/trusty-updates/main/installer-amd64/current/images/netboot/ubuntu-installer/amd64/initrd.gz
+kernel http://archive.ubuntu.com/ubuntu/dists/trusty-updates/main/installer-amd64/current/images/netboot/ubuntu-installer/amd64/linux -- ks=<%= baseurl %>/kickstart/${mac} ip=dhcp ksdevice=${mac}
+boot
 
 # Avoid redownloading initrd and kernel repeatedly
 :finish

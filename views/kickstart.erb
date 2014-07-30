@@ -49,7 +49,7 @@ part swap --size 1024
 part /boot --fstype ext4 --size 512 --asprimary
 
 #System authorization infomation
-auth  --useshadow  --enablemd5 
+auth  --useshadow  --enablemd5
 
 #Network information
 network --bootproto=dhcp --hostname=<%= asset.hostname %>

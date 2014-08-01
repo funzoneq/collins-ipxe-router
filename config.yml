@@ -7,3 +7,4 @@
 :initial_user: blendle
 :initial_pass: root4me2
 :initial_fullname: Blendle Baas
+:recursive_dns: ['8.8.8.8', '4.2.2.2']

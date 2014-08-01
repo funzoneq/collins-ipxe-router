@@ -125,11 +125,6 @@ bond-miimon 100
 bond-slaves none
 
 auto bond0
-iface bond0 inet6 static
-	address 2001:0DB8::<%= bond0.address.split(".")[3] %>
-	netmask 64
-	gateway 2001:0DB8::1
-
 iface bond0 inet static
 	address <%= bond0.address %>
 	netmask <%= bond0.netmask %>
@@ -138,6 +133,11 @@ iface bond0 inet static
 	bond-mode 5
 	bond-miimon 100
 	bond-slaves none
+
+iface bond0 inet6 static
+	address 2001:0DB8::<%= bond0.address.split(".")[3] %>
+	netmask 64
+	gateway 2001:0DB8::1
 EOF
 ) > /etc/network/interfaces
 

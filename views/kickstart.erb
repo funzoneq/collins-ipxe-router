@@ -75,21 +75,23 @@ python-apt
 lshw
 lldpd
 dmidecode
+ifenslave-2.6
 
 %post
 
 # add normal apt source list
 (
-cat <<'EOP'
+cat <<'EOF'
 deb <%= ubuntu_mirror %> trusty main universe restricted
 deb <%= ubuntu_mirror %> trusty-updates main universe restricted
 deb http://security.ubuntu.com/ubuntu trusty-security main universe restricted
-EOP
+EOF
 ) > /etc/apt/sources.list
 apt-get update
 apt-get upgrade -y
 
 # add network config
+echo 'bonding' >> /etc/modules
 (
 cat << 'EOF'
 # The loopback network interface

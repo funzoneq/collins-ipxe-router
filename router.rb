@@ -32,10 +32,10 @@ get '/pxe/:mac' do
 end
 
 get '/kickstart/:mac' do
-  mac       = URI.unescape(params[:mac])
-  vars      = YAML.load_file 'config.yml'
-  client    = Collins::Authenticator.setup_client
-  asset     = client.find({:mac_address => mac, :details => true, :size => 1}).first
+  mac          = URI.unescape(params[:mac])
+  vars         = YAML.load_file 'config.yml'
+  client       = Collins::Authenticator.setup_client
+  vars[:asset] = client.find({:mac_address => mac, :details => true, :size => 1}).first
   
   erb :kickstart, :locals => vars, :content_type => 'text/plain;charset=utf-8'
 end

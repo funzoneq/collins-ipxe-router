@@ -23,7 +23,11 @@ allow booting;
 allow bootp;
 option option-128 code 128 = string;
 option option-129 code 129 = text;
-option ipxe.http      code 19 = unsigned integer 8;
+
+# Declare the iPXE/gPXE/Etherboot option space
+option space ipxe;
+option ipxe-encap-opts code 175 = encapsulate ipxe;
+option ipxe.http code 19 = unsigned integer 8;
 
 subnet 192.168.1.0 netmask 255.255.255.0 {
   option domain-name          "example.com";

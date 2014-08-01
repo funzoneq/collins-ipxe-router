@@ -92,7 +92,7 @@ apt-get update
 apt-get upgrade -y
 
 # add network config
-echo 'bonding' >> /etc/modules
+echo "alias netdev-bond0 bonding\nalias netdev-bond1 bonding" > /etc/modprobe.d/bonding.conf
 (
 cat << 'EOF'
 # The loopback network interface

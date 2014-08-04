@@ -25,9 +25,10 @@ get '/pxe/:mac' do
   mac             = URI.unescape(params[:mac])
   vars            = YAML.load_file 'config.yml'
   client          = Collins::Authenticator.setup_client
-  vars[:asset]    = client.find({:mac_address => mac, :details => true, :size => 1}).first
-  vars[:hostname] = get_hostname(vars[:asset].get_attribute("hostname"))
-  vars[:domain]   = get_domain(vars[:asset].get_attribute("hostname"))
+  asset           = client.find({:mac_address => mac, :details => true, :size => 1}).first
+  vars[:hostname] = get_hostname(vars[:asset].get_attribute("hostname")) unless asset.nil?
+  vars[:domain]   = get_domain(vars[:asset].get_attribute("hostname")) unless asset.nil?
+  vars[:asset]    = asset unless asset.nil?
   
   case
   when asset.nil?

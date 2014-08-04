@@ -26,9 +26,9 @@ get '/pxe/:mac' do
   vars            = YAML.load_file 'config.yml'
   client          = Collins::Authenticator.setup_client
   asset           = client.find({:mac_address => mac, :details => true, :size => 1}).first
-  vars[:hostname] = get_hostname(vars[:asset].get_attribute("hostname")) unless asset.nil?
-  vars[:domain]   = get_domain(vars[:asset].get_attribute("hostname")) unless asset.nil?
   vars[:asset]    = asset unless asset.nil?
+  vars[:hostname] = get_hostname(asset.hostname) unless asset.nil?
+  vars[:domain]   = get_domain(asset.hostname) unless asset.nil?
   
   case
   when asset.nil?
@@ -48,9 +48,17 @@ get '/kickstart/:mac' do
   mac             = URI.unescape(params[:mac])
   vars            = YAML.load_file 'config.yml'
   client          = Collins::Authenticator.setup_client
-  vars[:asset]    = client.find({:mac_address => mac, :details => true, :size => 1}).first
-  vars[:hostname] = get_hostname(vars[:asset].get_attribute("hostname"))
-  vars[:domain]   = get_domain(vars[:asset].get_attribute("hostname"))
+  asset           = client.find({:mac_address => mac, :details => true, :size => 1}).first
   
-  erb :kickstart, :locals => vars, :content_type => 'text/plain;charset=utf-8'
+  if asset.nil?
+    vars[:message] = "Asset not found"
+    
+    erb :error, :locals => vars, :content_type => 'text/plain;charset=utf-8'
+  else
+    vars[:asset]    = asset unless asset.nil?
+    vars[:hostname] = get_hostname(asset.hostname) unless asset.nil?
+    vars[:domain]   = get_domain(asset.hostname) unless asset.nil?
+  
+    erb :kickstart, :locals => vars, :content_type => 'text/plain;charset=utf-8'
+  end
 end

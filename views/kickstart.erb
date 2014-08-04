@@ -148,3 +148,6 @@ locale-gen en_US.UTF-8
 update-locale LANG="en_US.UTF-8"
 echo 'LANG=en_US.UTF-8' >> /etc/environment
 echo 'LC_ALL=en_US.UTF-8' >> /etc/environment
+
+# Update collins status to Provisioned cause we are done
+curl --basic -H "Accept: text/plain" -u '<%= collins.username %>:<%= collins.password %>' -d 'status=Provisioned' -d 'reason=Kickstarted' -d 'state=RUNNING' <%= collins.host %>/api/asset/<%= asset.tag %>/status

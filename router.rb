@@ -55,6 +55,7 @@ get '/kickstart/:mac' do
     
     erb :error, :locals => vars, :content_type => 'text/plain;charset=utf-8'
   else
+    vars[:collins]  = client unless client.nil?
     vars[:asset]    = asset unless asset.nil?
     vars[:hostname] = get_hostname(asset.hostname) unless asset.nil?
     vars[:domain]   = get_domain(asset.hostname) unless asset.nil?

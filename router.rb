@@ -26,8 +26,8 @@ get '/pxe/:mac' do
   vars            = YAML.load_file 'config.yml'
   client          = Collins::Authenticator.setup_client
   vars[:asset]    = client.find({:mac_address => mac, :details => true, :size => 1}).first
-  vars[:hostname] = get_hostname(vars[:asset])
-  vars[:domain]   = get_domain(vars[:asset])
+  vars[:hostname] = get_hostname(vars[:asset].get_attribute("hostname"))
+  vars[:domain]   = get_domain(vars[:asset].get_attribute("hostname"))
   
   case
   when asset.nil?
@@ -48,8 +48,8 @@ get '/kickstart/:mac' do
   vars            = YAML.load_file 'config.yml'
   client          = Collins::Authenticator.setup_client
   vars[:asset]    = client.find({:mac_address => mac, :details => true, :size => 1}).first
-  vars[:hostname] = get_hostname(vars[:asset].hostname)
-  vars[:domain]   = get_domain(vars[:asset].hostname)
+  vars[:hostname] = get_hostname(vars[:asset].get_attribute("hostname"))
+  vars[:domain]   = get_domain(vars[:asset].get_attribute("hostname"))
   
   erb :kickstart, :locals => vars, :content_type => 'text/plain;charset=utf-8'
 end

@@ -11,12 +11,12 @@ def testing? (asset)
   asset.omw_test == "true"
 end
 
-def get_hostname (asset)
-  asset.hostname.split(".").shift
+def get_hostname (hostname)
+  hostname.split(".").shift
 end
 
-def get_domain (asset)
-  domain = asset.hostname.split(".")
+def get_domain (hostname)
+  domain = hostname.split(".")
   domain.shift
   domain
 end
@@ -48,8 +48,8 @@ get '/kickstart/:mac' do
   vars            = YAML.load_file 'config.yml'
   client          = Collins::Authenticator.setup_client
   vars[:asset]    = client.find({:mac_address => mac, :details => true, :size => 1}).first
-  vars[:hostname] = get_hostname(vars[:asset])
-  vars[:domain]   = get_domain(vars[:asset])
+  vars[:hostname] = get_hostname(vars[:asset].hostname)
+  vars[:domain]   = get_domain(vars[:asset].hostname)
   
   erb :kickstart, :locals => vars, :content_type => 'text/plain;charset=utf-8'
 end

@@ -11,11 +11,23 @@ def testing? (asset)
   asset.omw_test == "true"
 end
 
+def get_hostname (asset)
+  asset.hostname.split(".").shift
+end
+
+def get_domain (asset)
+  domain = asset.hostname.split(".")
+  domain.shift
+  domain
+end
+
 get '/pxe/:mac' do
-  mac       = URI.unescape(params[:mac])
-  vars      = YAML.load_file 'config.yml'
-  client    = Collins::Authenticator.setup_client
-  asset     = client.find({:mac_address => mac, :details => true, :size => 1}).first
+  mac             = URI.unescape(params[:mac])
+  vars            = YAML.load_file 'config.yml'
+  client          = Collins::Authenticator.setup_client
+  vars[:asset]    = client.find({:mac_address => mac, :details => true, :size => 1}).first
+  vars[:hostname] = get_hostname(vars[:asset])
+  vars[:domain]   = get_domain(vars[:asset])
   
   case
   when asset.nil?
@@ -32,10 +44,12 @@ get '/pxe/:mac' do
 end
 
 get '/kickstart/:mac' do
-  mac          = URI.unescape(params[:mac])
-  vars         = YAML.load_file 'config.yml'
-  client       = Collins::Authenticator.setup_client
-  vars[:asset] = client.find({:mac_address => mac, :details => true, :size => 1}).first
+  mac             = URI.unescape(params[:mac])
+  vars            = YAML.load_file 'config.yml'
+  client          = Collins::Authenticator.setup_client
+  vars[:asset]    = client.find({:mac_address => mac, :details => true, :size => 1}).first
+  vars[:hostname] = get_hostname(vars[:asset])
+  vars[:domain]   = get_domain(vars[:asset])
   
   erb :kickstart, :locals => vars, :content_type => 'text/plain;charset=utf-8'
 end

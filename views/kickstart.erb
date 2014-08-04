@@ -102,20 +102,20 @@ auto lo
 iface lo inet loopback
 
 # The primary network interface
-auto eth0
-iface eth0 inet manual
+auto em1
+iface em1 inet manual
 bond-master bond0
 
-auto eth1
-iface eth1 inet manual
+auto em2
+iface em2 inet manual
 bond-master bond0
 
-auto eth2
-iface eth2 inet manual
+auto em3
+iface em3 inet manual
 bond-master bond1
 
-auto eth3
-iface eth3 inet manual
+auto em4
+iface em4 inet manual
 bond-master bond1
 
 auto bond1

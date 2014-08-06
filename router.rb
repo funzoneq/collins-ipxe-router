@@ -18,7 +18,7 @@ end
 def get_domain (hostname)
   domain = hostname.split(".")
   domain.shift
-  domain
+  domain.join(".")
 end
 
 get '/pxe/:mac' do

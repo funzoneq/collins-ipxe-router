@@ -77,11 +77,8 @@ lldpd
 dmidecode
 ifenslave-2.6
 ethtool
--apparmor
--apparmor-utils
 
-%post
-
+%post --interpreter /bin/bash
 # add normal apt source list
 (
 cat <<'EOF'
@@ -93,8 +90,11 @@ EOF
 apt-get update
 apt-get upgrade -y
 
+apt-get -y remove apparmor apparmor-utils
+
 # add network config
-echo "alias netdev-bond0 bonding\nalias netdev-bond1 bonding" > /etc/modprobe.d/bonding.conf
+echo "alias netdev-bond0 bonding" > /etc/modprobe.d/bonding.conf
+echo "alias netdev-bond1 bonding" >> /etc/modprobe.d/bonding.conf
 (
 cat << 'EOF'
 # The loopback network interface
@@ -128,18 +128,18 @@ bond-slaves none
 
 auto bond0
 iface bond0 inet static
-	address <%= bond0.address %>
-	netmask <%= bond0.netmask %>
-	gateway <%= bond0.gateway %>
-	dns-nameservers <%= recursive_dns.join(" ") %>
-	bond-mode 5
-	bond-miimon 100
-	bond-slaves none
+address <%= bond0.address %>
+netmask <%= bond0.netmask %>
+gateway <%= bond0.gateway %>
+dns-nameservers <%= recursive_dns.join(" ") %>
+bond-mode 5
+bond-miimon 100
+bond-slaves none
 
 iface bond0 inet6 static
-	address 2001:0DB8::<%= bond0.address.split(".")[3] %>
-	netmask 64
-	gateway 2001:0DB8::1
+address 2001:0DB8::<%= bond0.address.split(".")[3] %>
+netmask 64
+gateway 2001:0DB8::1
 EOF
 ) > /etc/network/interfaces
 
@@ -151,3 +151,4 @@ echo 'LC_ALL=en_US.UTF-8' >> /etc/environment
 
 # Update collins status to Provisioned cause we are done
 curl --basic -H "Accept: text/plain" -u '<%= collins.username %>:<%= collins.password %>' -d 'status=Provisioned' -d 'reason=Kickstarted' -d 'state=RUNNING' <%= collins.host %>/api/asset/<%= asset.tag %>/status
+%end

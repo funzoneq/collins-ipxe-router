@@ -55,11 +55,18 @@ get '/kickstart/:mac' do
     
     erb :error, :locals => vars, :content_type => 'text/plain;charset=utf-8'
   else
-    vars[:collins]  = client unless client.nil?
-    vars[:asset]    = asset unless asset.nil?
-    vars[:hostname] = get_hostname(asset.hostname) unless asset.nil?
-    vars[:domain]   = get_domain(asset.hostname) unless asset.nil?
+    begin
+      vars[:collins]  = client unless client.nil?
+      vars[:asset]    = asset unless asset.nil?
+      vars[:hostname] = get_hostname(asset.hostname) unless asset.nil?
+      vars[:domain]   = get_domain(asset.hostname) unless asset.nil?
+      vars[:bond0]    = asset.public_address unless asset.nil?
+      vars[:bond1]    = asset.backend_address unless asset.nil?
   
-    erb :kickstart, :locals => vars, :content_type => 'text/plain;charset=utf-8'
+      erb :kickstart, :locals => vars, :content_type => 'text/plain;charset=utf-8'
+    rescue => e
+      puts "Something went wrong."
+      puts e.inspect
+    end
   end
 end

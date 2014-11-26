@@ -18,12 +18,12 @@ sanboot --no-describe --drive 0x80 || goto router_menu
 
 :intake
 initrd <%= image_server %>/omw/initrd0.img
-kernel <%= image_server %>/omw/vmlinuz0 SCRIPT_CMD=/usr/bin/getstarted GITURL=<%= git_url %> playbook=<%= playbook %> rootflags=loop root=live:/omw.iso rootfstype=auto ro liveimg rd_NO_LUKS rd_NO_MD rd_NO_DM console=tty0 console=ttyS1,115200
+kernel <%= image_server %>/omw/vmlinuz0 SCRIPT_CMD=/usr/bin/getstarted GITURL=<%= git_url %> PLAYBOOK=<%= playbook %> rootflags=loop root=live:/omw.iso rootfstype=auto ro liveimg rd_NO_LUKS rd_NO_MD rd_NO_DM console=tty0 console=ttyS1,115200
 boot
 
 :testing
 initrd <%= image_server %>/omw_test/initrd0.img
-kernel <%= image_server %>/omw_test/vmlinuz0 SCRIPT_CMD=/usr/bin/getstarted GITURL=<%= git_url %> playbook=<%= playbook %> rootflags=loop root=live:/omw.iso rootfstype=auto ro liveimg rd_NO_LUKS rd_NO_MD rd_NO_DM console=tty0 console=ttyS1,115200
+kernel <%= image_server %>/omw_test/vmlinuz0 SCRIPT_CMD=/usr/bin/getstarted GITURL=<%= git_url %> PLAYBOOK=<%= playbook %> rootflags=loop root=live:/omw.iso rootfstype=auto ro liveimg rd_NO_LUKS rd_NO_MD rd_NO_DM console=tty0 console=ttyS1,115200
 boot
 
 :provision

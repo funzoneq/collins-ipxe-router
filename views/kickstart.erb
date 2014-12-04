@@ -4,6 +4,10 @@
 # Fetch content from here
 url --url <%= ubuntu_mirror %>
 
+
+# preseed mirror/country string manual
+# preseed mirror/http/hostname string <%= ubuntu_mirror %>
+
 #System language
 lang en_US.UTF-8
 
@@ -23,7 +27,6 @@ rootpw --disabled
 user <%= initial_user %> --fullname "<%= initial_fullname %>" --password <%= initial_pass %>
 
 #Reboot after installation
-reboot
 
 # Use cmdline mode install for more debugging than text
 cmdline
@@ -83,16 +86,11 @@ chvt 2
 cat /proc/partitions
 ) 2>&1 | tee /dev/console
 
-%post --nochroot
-(
-exec 2>&1
-set -x -v
-
-# add network config
+%post --nochroot --interpreter=/bin/bash
 echo "alias netdev-bond0 bonding" > /target/etc/modprobe.d/bonding.conf
 echo "alias netdev-bond1 bonding" >> /target/etc/modprobe.d/bonding.conf
 
-cat > /target/etc/network/interfaces <<EoF
+cat > /target/etc/network/interfaces <<EOF
 auto lo
 iface lo inet loopback
 
@@ -134,10 +132,12 @@ iface bond0 inet6 static
 address <%= ipv6_prefix %><%= bond0.address.split(".")[3] %>
 netmask 64
 gateway <%= ipv6_prefix %>1
-EoF
+EOF
 
 # Update collins status to Provisioned cause we are done
-curl --basic -H "Accept: text/plain" -u '<%= collins.username %>:<%= collins.password %>' -d 'status=Provisioned' -d 'reason=Kickstarted' -d 'state=RUNNING' <%= collins.host %>/api/asset/<%= asset.tag %>/status
+chroot /target /usr/bin/curl --basic -H "Accept: text/plain" -u '<%= collins.username %>:<%= collins.password %>' -d 'status=Provisioned' -d 'reason=Kickstarted' -d 'state=RUNNING' <%= collins.host %>/api/asset/<%= asset.tag %>/status
+%end
 
-# Log to post file and console
-) 2>&1 | /usr/bin/tee /target/root/ks_post.log | tee /dev/console
+#Reboot after installation
+reboot
+

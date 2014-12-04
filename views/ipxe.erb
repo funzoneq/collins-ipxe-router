@@ -14,7 +14,7 @@ item --key 3 provision 3: Provision - Install Ubuntu 14.04
 choose --default <%= action %> --timeout 10000 target && goto ${target}
 
 :local
-sanboot --no-describe --drive 0x80 || goto router_menu
+chain http://<%= grub_url %> --config-file="rootnoverify (hd0);chainloader +1"
 
 :intake
 initrd <%= image_server %>/omw/initrd0.img

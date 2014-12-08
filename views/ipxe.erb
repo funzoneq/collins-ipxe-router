@@ -14,10 +14,10 @@ item --key 3 provision 3: Provision - Install Ubuntu 14.04
 choose --default <%= action %> --timeout 10000 target && goto ${target}
 
 :local
-chain http://<%= grub_url %> --config-file="rootnoverify (hd0);chainloader +1"
+chain <%= image_server %>/omw/grub.exe --config-file="rootnoverify (hd0);chainloader +1"
 
 :intake
-initrd <%= image_server %>/omw/initrd0.img
+initrd initrd0.img
 kernel <%= image_server %>/omw/vmlinuz0 SCRIPT_CMD=/usr/bin/getstarted GITURL=<%= git_url %> PLAYBOOK=<%= playbook %> rootflags=loop root=live:/omw.iso rootfstype=auto ro liveimg rd_NO_LUKS rd_NO_MD rd_NO_DM console=tty0 console=ttyS1,115200
 boot
 
@@ -39,6 +39,6 @@ boot
 echo
 echo Attempting to boot from local drive
 echo
-sanboot --no-describe --drive 0x80
+chain <%= image_server %>/omw/grub.exe --config-file="rootnoverify (hd0);chainloader +1"
 
 <% end %>

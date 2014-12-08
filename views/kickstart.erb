@@ -4,10 +4,6 @@
 # Fetch content from here
 url --url <%= ubuntu_mirror %>
 
-
-# preseed mirror/country string manual
-# preseed mirror/http/hostname string <%= ubuntu_mirror %>
-
 #System language
 lang en_US.UTF-8
 
@@ -25,8 +21,6 @@ rootpw --disabled
 
 #Initial user (user with sudo capabilities) 
 user <%= initial_user %> --fullname "<%= initial_fullname %>" --password <%= initial_pass %>
-
-#Reboot after installation
 
 # Use cmdline mode install for more debugging than text
 cmdline

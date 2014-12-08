@@ -9,6 +9,3 @@
 :initial_fullname: Blendle Baas
 :recursive_dns: ['8.8.8.8', '4.2.2.2']
 :ipv6_prefix: 2001:0DB8::
-:collins_kickstart_user: a user that has rights to change statuses
-:collins_kickstart_password: the password of that user
-:grub_url: "http://172.16.16.26/grub.exe"

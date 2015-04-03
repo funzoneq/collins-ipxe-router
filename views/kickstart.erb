@@ -42,7 +42,7 @@ clearpart --all --initlabel
 
 #Basic disk partition
 part / --fstype ext4 --size 1 --grow --asprimary 
-part swap --size 1024 
+part swap --size 16384 
 part /boot --fstype ext4 --size 512 --asprimary
 
 #System authorization infomation
@@ -53,6 +53,9 @@ network --bootproto=dhcp --hostname=<%= asset.hostname %>
 
 #Firewall configuration
 firewall --disabled
+
+#Reboot after installation
+reboot
 
 #Package install information
 %packages
@@ -71,20 +74,13 @@ dmidecode
 ifenslave-2.6
 ethtool
 
-%pre
-#create a debug shell
-/bin/openvt /bin/bash
+%post --interpreter=/bin/bash
+chroot /target
 
-chvt 2
-(
-cat /proc/partitions
-) 2>&1 | tee /dev/console
+echo "alias netdev-bond0 bonding" > /etc/modprobe.d/bonding.conf
+echo "alias netdev-bond1 bonding" >> /etc/modprobe.d/bonding.conf
 
-%post --nochroot --interpreter=/bin/bash
-echo "alias netdev-bond0 bonding" > /target/etc/modprobe.d/bonding.conf
-echo "alias netdev-bond1 bonding" >> /target/etc/modprobe.d/bonding.conf
-
-cat > /target/etc/network/interfaces <<EOF
+cat > /etc/network/interfaces <<EOF
 auto lo
 iface lo inet loopback
 
@@ -108,9 +104,12 @@ auto bond1
 iface bond1 inet static
 address <%= bond1.address %>
 netmask  <%= bond1.netmask %>
-bond-mode 5
-bond-miimon 100
-bond-slaves none
+bond-mode 4
+bond_miimon 100
+bond_downdelay 200
+bond_updelay 200
+bond_xmit_hash_policy layer2+3
+bond_lacp_rate slow
 
 auto bond0
 iface bond0 inet static
@@ -118,9 +117,12 @@ address <%= bond0.address %>
 netmask <%= bond0.netmask %>
 gateway <%= bond0.gateway %>
 dns-nameservers <%= recursive_dns.join(" ") %>
-bond-mode 5
-bond-miimon 100
-bond-slaves none
+bond-mode 4
+bond_miimon 100
+bond_downdelay 200
+bond_updelay 200
+bond_xmit_hash_policy layer2+3
+bond_lacp_rate slow
 
 iface bond0 inet6 static
 address <%= ipv6_prefix %><%= bond0.address.split(".")[3] %>
@@ -129,9 +131,5 @@ gateway <%= ipv6_prefix %>1
 EOF
 
 # Update collins status to Provisioned cause we are done
-chroot /target /usr/bin/curl --basic -H "Accept: text/plain" -u '<%= collins.username %>:<%= collins.password %>' -d 'status=Provisioned' -d 'reason=Kickstarted' -d 'state=RUNNING' <%= collins.host %>/api/asset/<%= asset.tag %>/status
-%end
-
-#Reboot after installation
-reboot
+/usr/bin/curl --basic -H "Accept: text/plain" -u '<%= collins.username %>:<%= collins.password %>' -d 'status=Provisioned' -d 'reason=Kickstarted' -d 'state=RUNNING' <%= collins.host %>/api/asset/<%= asset.tag %>/status
 

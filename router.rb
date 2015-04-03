@@ -12,13 +12,21 @@ def testing? (asset)
 end
 
 def get_hostname (hostname)
-  hostname.split(".").shift
+  if not hostname.nil?
+    hostname.split(".").shift
+  else
+    'foo'
+  end
 end
 
 def get_domain (hostname)
-  domain = hostname.split(".")
-  domain.shift
-  domain.join(".")
+  if not hostname.nil?  
+    domain = hostname.split(".")
+    domain.shift
+    domain.join(".")
+  else
+    'example.com'
+  end
 end
 
 get '/pxe/:mac' do

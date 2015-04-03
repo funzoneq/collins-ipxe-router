@@ -35,8 +35,14 @@ get '/pxe/:mac' do
   client          = Collins::Authenticator.setup_client
   asset           = client.find({:mac_address => mac, :details => true, :size => 1}).first
   vars[:asset]    = asset unless asset.nil?
-  vars[:hostname] = get_hostname(asset.hostname) unless asset.nil?
-  vars[:domain]   = get_domain(asset.hostname) unless asset.nil?
+
+  if asset.nil?
+    vars[:hostname] = 'foo'
+    vars[:domain]   = 'example.com'
+  else
+    vars[:hostname] = get_hostname(asset.hostname)
+    vars[:domain]   = get_domain(asset.hostname)
+  end
   
   case
   when asset.nil?

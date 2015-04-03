@@ -17,7 +17,7 @@ choose --default <%= action %> --timeout 10000 target && goto ${target}
 chain <%= image_server %>/omw/grub.exe --config-file="rootnoverify (hd0);chainloader +1"
 
 :intake
-initrd initrd0.img
+initrd <%= image_server %>/omw/initrd0.img
 kernel <%= image_server %>/omw/vmlinuz0 SCRIPT_CMD=/usr/bin/getstarted GITURL=<%= git_url %> PLAYBOOK=<%= playbook %> rootflags=loop root=live:/omw.iso rootfstype=auto ro liveimg rd_NO_LUKS rd_NO_MD rd_NO_DM console=tty0 console=ttyS1,115200
 boot
 

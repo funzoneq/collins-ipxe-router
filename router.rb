@@ -2,6 +2,7 @@ require 'sinatra'
 require 'collins_auth'
 require 'uri'
 require 'yaml'
+require 'tilt/erb'
 
 def provision? (asset)
   asset.status == "Provisioning"
@@ -71,17 +72,25 @@ get '/kickstart/:mac' do
   else
     begin
       vars[:collins]  = client unless client.nil?
-      vars[:asset]    = asset unless asset.nil?
-      vars[:hostname] = get_hostname(asset.hostname) unless asset.nil?
-      vars[:domain]   = get_domain(asset.hostname) unless asset.nil?
-      vars[:bond0]    = asset.public_address unless asset.nil?
-      vars[:bond1]    = asset.backend_address unless asset.nil?
-      vars[:aliasses] = asset.addresses.delete_if {|a| a.is_private? or a.address == asset.public_address.address } unless asset.nil?
+
+      if not asset.nil?
+        bond0           = asset.public_address
+        bond1           = asset.backend_address
+        aliasses        = asset.addresses.delete_if { |a| a.is_private? or a.address == bond0.address }
+
+        vars[:asset]    = asset
+        vars[:hostname] = get_hostname(asset.hostname)
+        vars[:domain]   = get_domain(asset.hostname)
+        vars[:bond0]    = bond0
+        vars[:bond1]    = bond1
+        vars[:aliasses] = aliasses
+      end
   
       erb :kickstart, :locals => vars, :content_type => 'text/plain;charset=utf-8'
     rescue => e
       puts "Something went wrong."
-      puts e.inspect
+      puts e.message
+      puts e.backtrace.inspect
     end
   end
 end

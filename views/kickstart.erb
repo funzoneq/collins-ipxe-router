@@ -16,6 +16,9 @@ keyboard us
 #System timezone
 timezone Etc/UTC
 
+#Enable debug logging
+logging --level=debug
+
 #Root password
 rootpw --disabled
 
@@ -75,12 +78,15 @@ ifenslave-2.6
 ethtool
 
 %post --interpreter=/bin/bash
-chroot /target
 
-echo "alias netdev-bond0 bonding" > /etc/modprobe.d/bonding.conf
-echo "alias netdev-bond1 bonding" >> /etc/modprobe.d/bonding.conf
+# This is the trick — automatically switch to 6th console
+exec < /dev/tty6 > /dev/tty6 2> /dev/tty6
+chvt 6
 
-cat > /etc/network/interfaces <<EOF
+echo "alias netdev-bond0 bonding" > /target/etc/modprobe.d/bonding.conf
+echo "alias netdev-bond1 bonding" >> /target/etc/modprobe.d/bonding.conf
+
+cat > /target/etc/network/interfaces <<EOF
 auto lo
 iface lo inet loopback
 
@@ -132,4 +138,11 @@ EOF
 
 # Update collins status to Provisioned cause we are done
 /usr/bin/curl --basic -H "Accept: text/plain" -u '<%= collins.username %>:<%= collins.password %>' -d 'status=Provisioned' -d 'reason=Kickstarted' -d 'state=RUNNING' <%= collins.host %>/api/asset/<%= asset.tag %>/status
+
+# We can break into a shell prompt
+/bin/sh
+
+# Then switch back to Anaconda on the first console
+chvt 1
+exec < /dev/tty1 > /dev/tty1 2> /dev/tty1
 

@@ -97,7 +97,7 @@ iface lo inet loopback
 source /etc/network/interfaces.d/*.cfg
 EOF
 
-for INF in $(ls /sys/class/net/); do
+for INF in $(ls /sys/class/net/|egrep -v 'lo|bond'); do
 cat << EOF > /etc/network/interfaces.d/$INF.cfg
 auto $INF
 iface $INF inet manual

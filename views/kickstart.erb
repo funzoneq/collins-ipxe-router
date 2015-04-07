@@ -54,13 +54,13 @@ auth  --useshadow  --enablemd5
 #Network information
 network --device=bond0 --bootproto=static --onboot=yes --hostname=<%= asset.hostname %> --ip=<%= bond0.address %> --netmask=<%= bond0.netmask %> --gateway=<%= bond0.gateway %> --nameserver=<%= recursive_dns.join(" ") %> --bondslaves=em1,em2 --bondopts=mode=4,miimon=100,downdelay=200,updelay=200,xmit_hash_policy=layer2+3,lacp_rate=slow
 
-network --device=bond1 --bootproto=static --onboot=yes --hostname=<%= asset.hostname %> --ip=<%= bond1.address %> --netmask=<%= bond1.netmask %> --nodns --bondslaves=em3,em4 --bondopts=mode=4,miimon=100,downdelay=200,updelay=200,xmit_hash_policy=layer2+3,lacp_rate=slow
+network --device=bond1 --bootproto=static --onboot=yes --hostname=<%= asset.hostname %> --ip=<%= bond1.address %> --netmask=<%= bond1.netmask %> --nodns --bondslaves=p2p1,p2p2 --bondopts=mode=4,miimon=100,downdelay=200,updelay=200,xmit_hash_policy=layer2+3,lacp_rate=slow
 
 # bond slaves
 network --device=em1 --nodns --bootproto=static --onboot=yes
 network --device=em2 --nodns --bootproto=static --onboot=yes
-network --device=em3 --nodns --bootproto=static --onboot=yes
-network --device=em4 --nodns --bootproto=static --onboot=yes
+network --device=p2p1 --nodns --bootproto=static --onboot=yes
+network --device=p2p2 --nodns --bootproto=static --onboot=yes
 
 #Firewall configuration
 firewall --disabled
@@ -112,11 +112,11 @@ auto em2
 iface em2 inet manual
 bond-master bond0
 
-auto em3
+auto p2p1
 iface em3 inet manual
 bond-master bond1
 
-auto em4
+auto p2p2
 iface em4 inet manual
 bond-master bond1
 

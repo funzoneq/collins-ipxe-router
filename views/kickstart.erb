@@ -147,6 +147,9 @@ netmask <%= a.netmask %>
 EOF
 <% end %>
 
+# Move /etc/network/interfaces.ks on first boot
+sed -i "/exit 0/c\[ -f \/etc\/network\/interfaces.ks \] && mv \/etc\/network\/interfaces.ks \/etc\/network\/interfaces\nexit 0" /etc/rc.local
+
 # Update collins status to Provisioned cause we are done
 /usr/bin/curl --basic -H "Accept: text/plain" -u '<%= collins.username %>:<%= collins.password %>' -d 'status=Provisioned' -d 'reason=Kickstarted' -d 'state=RUNNING' <%= collins.host %>/api/asset/<%= asset.tag %>/status
 

@@ -76,7 +76,7 @@ get '/kickstart/:mac' do
       vars[:domain]   = get_domain(asset.hostname) unless asset.nil?
       vars[:bond0]    = asset.public_address unless asset.nil?
       vars[:bond1]    = asset.backend_address unless asset.nil?
-      vars[:aliasses] = asset.addresses.delete_if {|a| a.is_private? or a.address == bond0.address } unless asset.nil?
+      vars[:aliasses] = asset.addresses.delete_if {|a| a.is_private? or a.address == asset.public_address.address } unless asset.nil?
   
       erb :kickstart, :locals => vars, :content_type => 'text/plain;charset=utf-8'
     rescue => e

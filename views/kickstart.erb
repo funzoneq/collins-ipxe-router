@@ -83,10 +83,10 @@ ethtool
 exec < /dev/tty6 > /dev/tty6 2> /dev/tty6
 chvt 6
 
-echo "alias netdev-bond0 bonding" > /target/etc/modprobe.d/bonding.conf
-echo "alias netdev-bond1 bonding" >> /target/etc/modprobe.d/bonding.conf
+echo "alias netdev-bond0 bonding" > /etc/modprobe.d/bonding.conf
+echo "alias netdev-bond1 bonding" >> /etc/modprobe.d/bonding.conf
 
-cat > /target/etc/network/interfaces <<EOF
+cat > /etc/network/interfaces <<EOF
 auto lo
 iface lo inet loopback
 

@@ -86,7 +86,7 @@ chvt 6
 echo "alias netdev-bond0 bonding" > /etc/modprobe.d/bonding.conf
 echo "alias netdev-bond1 bonding" >> /etc/modprobe.d/bonding.conf
 
-cat << EOF > /etc/network/interfaces
+cat << EOF > /etc/network/interfaces.ks
 # This file describes the network interfaces available on your system
 # and how to activate them. For more information, see interfaces(5).
  
@@ -97,15 +97,12 @@ iface lo inet loopback
 source /etc/network/interfaces.d/*.cfg
 EOF
 
-for INF in $(ls /sys/class/net/)
-do
-
+for INF in $(ls /sys/class/net/); do
 cat << EOF > /etc/network/interfaces.d/$INF.cfg
 auto $INF
 iface $INF inet manual
 bond-master bond0
 EOF
-
 done
 
 cat << EOF > /etc/network/interfaces.d/bond1.cfg
@@ -147,7 +144,7 @@ auto bond0:<%= k %>
 iface bond0:<%= k %> inet static
 address <%= a.address %>
 netmask <%= a.netmask %>
-
+EOF
 <% end %>
 
 # Update collins status to Provisioned cause we are done

@@ -28,7 +28,7 @@ boot
 
 :provision
 initrd http://archive.ubuntu.com/ubuntu/dists/trusty-updates/main/installer-amd64/current/images/netboot/ubuntu-installer/amd64/initrd.gz
-kernel http://archive.ubuntu.com/ubuntu/dists/trusty-updates/main/installer-amd64/current/images/netboot/ubuntu-installer/amd64/linux -- ks=<%= baseurl %>/kickstart/${mac} ip=dhcp ksdevice=${mac} hostname=<%= hostname %> domain=<%= domain %> console=tty0 console=ttyS1,115200
+kernel http://archive.ubuntu.com/ubuntu/dists/trusty-updates/main/installer-amd64/current/images/netboot/ubuntu-installer/amd64/linux -- ks=<%= baseurl %>/kickstart/${mac} ip=dhcp ksdevice=${mac} hostname=<%= hostname %> domain=<%= domain %> biosdevname=0 console=tty0 console=ttyS1,115200
 boot
 
 # Avoid redownloading initrd and kernel repeatedly

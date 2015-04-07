@@ -52,7 +52,15 @@ part /boot --fstype ext4 --size 512 --asprimary
 auth  --useshadow  --enablemd5
 
 #Network information
-network --bootproto=dhcp --hostname=<%= asset.hostname %>
+network --device=bond0 --bootproto=static --onboot=yes --hostname=<%= asset.hostname %> --ip=<%= bond0.address %> --netmask=<%= bond0.netmask %> --gateway=<%= bond0.gateway %> --nameserver=<%= recursive_dns.join(" ") %> --bondslaves=em1,em2 --bondopts=mode=4,miimon=100,downdelay=200,updelay=200,xmit_hash_policy=layer2+3,lacp_rate=slow
+
+network --device=bond1 --bootproto=static --onboot=yes --hostname=<%= asset.hostname %> --ip=<%= bond1.address %> --netmask=<%= bond1.netmask %> --nodns --bondslaves=em3,em4 --bondopts=mode=4,miimon=100,downdelay=200,updelay=200,xmit_hash_policy=layer2+3,lacp_rate=slow
+
+# bond slaves
+network --device=em1 --nodns --bootproto=static --onboot=yes
+network --device=em2 --nodns --bootproto=static --onboot=yes
+network --device=em3 --nodns --bootproto=static --onboot=yes
+network --device=em4 --nodns --bootproto=static --onboot=yes
 
 #Firewall configuration
 firewall --disabled
@@ -77,7 +85,7 @@ dmidecode
 ifenslave-2.6
 ethtool
 
-%post --interpreter=/bin/bash
+%post --interpreter=/bin/bash --logfile /root/ks-post.log
 
 # This is the trick — automatically switch to 6th console
 exec < /dev/tty6 > /dev/tty6 2> /dev/tty6
@@ -86,7 +94,13 @@ chvt 6
 echo "alias netdev-bond0 bonding" > /etc/modprobe.d/bonding.conf
 echo "alias netdev-bond1 bonding" >> /etc/modprobe.d/bonding.conf
 
-cat > /etc/network/interfaces <<EOF
+cp /etc/network/interfaces /etc/network/interfaces.backup.$(date "+%Y-%m-%d")
+
+cat << EOF > /etc/network/interfaces.ks
+# This file describes the network interfaces available on your system
+# and how to activate them. For more information, see interfaces(5).
+ 
+# The loopback network interface
 auto lo
 iface lo inet loopback
 
@@ -139,8 +153,8 @@ EOF
 # Update collins status to Provisioned cause we are done
 /usr/bin/curl --basic -H "Accept: text/plain" -u '<%= collins.username %>:<%= collins.password %>' -d 'status=Provisioned' -d 'reason=Kickstarted' -d 'state=RUNNING' <%= collins.host %>/api/asset/<%= asset.tag %>/status
 
-# We can break into a shell prompt
-/bin/sh
+# We can break into a shell prompt for debugging
+#/bin/sh
 
 # Then switch back to Anaconda on the first console
 chvt 1

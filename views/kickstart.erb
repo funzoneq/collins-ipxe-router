@@ -86,8 +86,6 @@ chvt 6
 echo "alias netdev-bond0 bonding" > /etc/modprobe.d/bonding.conf
 echo "alias netdev-bond1 bonding" >> /etc/modprobe.d/bonding.conf
 
-cp /etc/network/interfaces /etc/network/interfaces.backup.$(date "+%Y-%m-%d")
-
 cat << EOF > /etc/network/interfaces.ks
 # This file describes the network interfaces available on your system
 # and how to activate them. For more information, see interfaces(5).
@@ -96,22 +94,21 @@ cat << EOF > /etc/network/interfaces.ks
 auto lo
 iface lo inet loopback
 
-auto em1
-iface em1 inet manual
+source /etc/network/interfaces.d/*.cfg
+EOF
+
+for INF in $(ls /sys/class/net/)
+do
+
+cat << EOF > /etc/network/interfaces.d/$INF.cfg
+auto $INF
+iface $INF inet manual
 bond-master bond0
+EOF
 
-auto em2
-iface em2 inet manual
-bond-master bond0
+done
 
-auto p2p1
-iface em3 inet manual
-bond-master bond1
-
-auto p2p2
-iface em4 inet manual
-bond-master bond1
-
+cat << EOF > /etc/network/interfaces.d/bond1.cfg
 auto bond1
 iface bond1 inet static
 address <%= bond1.address %>
@@ -122,7 +119,9 @@ bond_downdelay 200
 bond_updelay 200
 bond_xmit_hash_policy layer2+3
 bond_lacp_rate slow
+EOF
 
+cat << EOF > /etc/network/interfaces.d/bond0.cfg
 auto bond0
 iface bond0 inet static
 address <%= bond0.address %>
@@ -141,6 +140,17 @@ address <%= ipv6_prefix %><%= bond0.address.split(".")[3] %>
 netmask 64
 gateway <%= ipv6_prefix %>1
 EOF
+
+<%
+aliasses.each_with_index do |a,k|
+    puts "cat << EOF > /etc/network/interfaces.d/bond0:#{k}.cfg
+auto bond0:#{k}
+iface bond0:#{k} inet static
+address #{a.address}
+netmask #{a.netmask}
+"
+end
+%>
 
 # Update collins status to Provisioned cause we are done
 /usr/bin/curl --basic -H "Accept: text/plain" -u '<%= collins.username %>:<%= collins.password %>' -d 'status=Provisioned' -d 'reason=Kickstarted' -d 'state=RUNNING' <%= collins.host %>/api/asset/<%= asset.tag %>/status

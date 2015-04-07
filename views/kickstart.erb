@@ -141,16 +141,13 @@ netmask 64
 gateway <%= ipv6_prefix %>1
 EOF
 
-<%
-aliasses.each_with_index do |a,k|
-    puts "cat << EOF > /etc/network/interfaces.d/bond0:#{k}.cfg
-auto bond0:#{k}
-iface bond0:#{k} inet static
-address #{a.address}
-netmask #{a.netmask}
-"
-end
-%>
+<% aliasses.each_with_index do |a,k| %>
+cat << EOF > /etc/network/interfaces.d/bond0:<%= k %>.cfg
+auto bond0:<%= k %>
+iface bond0:<%= k %> inet static
+address <%= a.address %>
+netmask <%= a.netmask %>
+<% end %>
 
 # Update collins status to Provisioned cause we are done
 /usr/bin/curl --basic -H "Accept: text/plain" -u '<%= collins.username %>:<%= collins.password %>' -d 'status=Provisioned' -d 'reason=Kickstarted' -d 'state=RUNNING' <%= collins.host %>/api/asset/<%= asset.tag %>/status

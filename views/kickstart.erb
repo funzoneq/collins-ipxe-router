@@ -44,9 +44,14 @@ zerombr yes
 clearpart --all --initlabel 
 
 #Basic disk partition
-part / --fstype ext4 --size 1 --grow --asprimary 
-part swap --size 16384 
-part /boot --fstype ext4 --size 512 --asprimary
+part swap       --size 16384
+part /          --fstype ext4 --size 1 --grow --asprimary  
+part /boot      --fstype ext4 --size 512 --asprimary
+part /tmp       --fstype ext4 --size 5120 --fsoptions="nodev,noexec,nosuid"
+<% if asset.nodeclass == 'edge' %>
+part /var/log   --fstype ext4 --size=1024 --ondisk=/dev/sdb --grow
+part /cache     --fstype ext4 --size=1024 --ondisk=/dev/sdc --grow
+<% end %>
 
 #System authorization infomation
 auth  --useshadow  --enablemd5
@@ -77,7 +82,7 @@ dmidecode
 ifenslave-2.6
 ethtool
 
-%post --interpreter=/bin/bash --logfile /root/ks-post.log
+%post --interpreter=/bin/bash
 
 # This is the trick — automatically switch to 6th console
 exec < /dev/tty6 > /dev/tty6 2> /dev/tty6
@@ -101,7 +106,7 @@ for INF in $(ls /sys/class/net/|egrep -v 'lo|bond'); do
 cat << EOF > /etc/network/interfaces.d/$INF.cfg
 auto $INF
 iface $INF inet manual
-bond-master bond0
+#bond-master bond0
 EOF
 done
 

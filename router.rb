@@ -12,6 +12,10 @@ def testing? (asset)
   asset.omw_test == "true"
 end
 
+def reintake? (asset)
+  asset.reintake == "true"
+end
+
 def get_hostname (hostname)
   if not hostname.nil?
     hostname.split(".").shift
@@ -47,6 +51,8 @@ get '/pxe/:mac' do
   
   case
   when asset.nil?
+    vars[:action] = :intake
+  when reintake?(asset)
     vars[:action] = :intake
   when testing?(asset)
     vars[:action] = :testing

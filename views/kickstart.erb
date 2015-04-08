@@ -35,7 +35,11 @@ skipx
 install
 
 #System bootloader configuration
-bootloader --location=mbr
+<% if asset.nodeclass == 'edge' %>
+bootloader --location=mbr -–driveorder=sda,sdb,sdc
+<% else %>
+bootloader --location=mbr 
+<% end %>
 
 #Clear the Master Boot Record
 zerombr yes

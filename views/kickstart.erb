@@ -38,14 +38,10 @@ install
 bootloader --location=mbr
 
 #Clear the Master Boot Record
-zerombr yes
+zerombr
 
 #Partition clearing information
-<% if asset.nodeclass == 'edge' %>
-clearpart --initlabel --all --drives=sda,sdb,sdc
-<% else %>
 clearpart --initlabel --all
-<% end %>
 
 #Basic disk partition
 part swap       --size 16384 --ondisk=sda

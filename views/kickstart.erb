@@ -34,18 +34,21 @@ skipx
 #Install OS instead of upgrade
 install
 
-#System bootloader configuration
-<% if asset.nodeclass == 'edge' %>
-bootloader --location=mbr -–driveorder=sda,sdb,sdc
-<% else %>
-bootloader --location=mbr 
-<% end %>
-
 #Clear the Master Boot Record
 zerombr yes
 
+#System bootloader configuration
+<% if asset.nodeclass == 'edge' %>
+bootloader --location=mbr -–driveorder=sda,sdb,sdc
+
+#Partition clearing information
+clearpart --all --drives=sda,sdb,sdc --initlabel
+<% else %>
+bootloader --location=mbr
+
 #Partition clearing information
 clearpart --initlabel --all
+<% end %>
 
 #Basic disk partition
 part swap       --size 16384 --ondisk=sda

@@ -37,24 +37,21 @@ install
 #Clear the Master Boot Record
 zerombr yes
 
+#Partition clearing information
+clearpart --initlabel --all
+
 #System bootloader configuration
 <% if asset.nodeclass == 'edge' %>
 bootloader --location=mbr -–driveorder=sda,sdb,sdc
-
-#Partition clearing information
-clearpart --all --drives=sda,sdb,sdc --initlabel
 <% else %>
 bootloader --location=mbr
-
-#Partition clearing information
-clearpart --initlabel --all
 <% end %>
 
 #Basic disk partition
-part swap       --size 16384 --ondisk=sda
-part /          --fstype ext4 --size 1 --grow --asprimary --ondisk=sda
-part /boot      --fstype ext4 --size 512 --asprimary --ondisk=sda
-part /tmp       --fstype ext4 --size 5120 --ondisk=sda --fsoptions="nodev,noexec,nosuid"
+part swap       --size 16384
+part /          --fstype ext4 --size 1 --grow --asprimary
+part /boot      --fstype ext4 --size 512 --asprimary
+part /tmp       --fstype ext4 --size 5120 --fsoptions="nodev,noexec,nosuid"
 <% if asset.nodeclass == 'edge' %>
 part /var/log   --fstype ext4 --size=1024 --ondisk=sdb --grow
 part /cache     --fstype ext4 --size=1024 --ondisk=sdc --grow

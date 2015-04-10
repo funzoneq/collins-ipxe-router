@@ -42,14 +42,12 @@ d-i partman-auto/expert_recipe string edge-root ::            \
                       $primary{ }                             \
                       $bios_boot{ }                           \
                       method{ biosgrub }                      \
-                      device { /dev/sda }                     \
               .                                               \
               40 50 100 ext4                                  \
                       $primary{ } $bootable{ }                \
                       method{ format } format{ }              \
                       use_filesystem{ } filesystem{ ext4 }    \
                       mountpoint{ /boot }                     \
-                      device { /dev/sda }                     \
               .                                               \
               64 512 100% linux-swap                          \
                       method{ swap } format{ }                \
@@ -58,7 +56,6 @@ d-i partman-auto/expert_recipe string edge-root ::            \
                       method{ format } format{ }              \
                       use_filesystem{ } filesystem{ ext4 }    \
                       mountpoint{ / }                         \
-                      device { /dev/sda }                     \
               .                                               \
               500 501 -1 ext4                                 \
                       $primary{ }                             \

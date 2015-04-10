@@ -108,4 +108,4 @@ d-i finish-install/keep-consoles boolean true
 d-i finish-install/reboot_in_progress note
 
 #### Advanced options
-#d-i preseed/late_command string apt-install zsh; in-target chsh -s /bin/zsh
+d-i preseed/late_command string in-target wget <%= baseurl %>/postinstall/<%= asset.tag %> -O /root/postinstall.sh; chmod +x /root/postinstall.sh; /root/postinstall.sh; rm /root/postinstall.sh

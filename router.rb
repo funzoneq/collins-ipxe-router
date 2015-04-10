@@ -81,21 +81,19 @@ get '/kickstart/:mac' do
     erb :error, :locals => vars, :content_type => 'text/plain;charset=utf-8'
   else
     begin
-      vars[:collins]  = client unless client.nil?
+      vars[:collins]      = client
 
-      if not asset.nil?
-        bond0               = asset.public_address
-        bond1               = asset.backend_address
-        aliasses            = asset.addresses.delete_if { |a| a.is_private? or a.address == bond0.address }
+      bond0               = asset.public_address
+      bond1               = asset.backend_address
+      aliasses            = asset.addresses.delete_if { |a| a.is_private? or a.address == bond0.address }
 
-        vars[:asset]        = asset
-        vars[:hostname]     = get_hostname(asset.hostname)
-        vars[:domain]       = get_domain(asset.hostname)
-        vars[:passwd_hash]  = generate_shadow_hash(SecureRandom.hex, vars[:initial_pass])
-        vars[:bond0]        = bond0
-        vars[:bond1]        = bond1
-        vars[:aliasses]     = aliasses
-      end
+      vars[:asset]        = asset
+      vars[:hostname]     = get_hostname(asset.hostname)
+      vars[:domain]       = get_domain(asset.hostname)
+      vars[:passwd_hash]  = generate_shadow_hash(SecureRandom.hex, vars[:initial_pass])
+      vars[:bond0]        = bond0
+      vars[:bond1]        = bond1
+      vars[:aliasses]     = aliasses
   
       erb :kickstart, :locals => vars, :content_type => 'text/plain;charset=utf-8'
     rescue => e
@@ -116,23 +114,54 @@ get '/preseed/:mac' do
     erb :error, :locals => vars, :content_type => 'text/plain;charset=utf-8'
   else
     begin
-      vars[:collins]  = client unless client.nil?
+      vars[:collins]      = client
 
-      if not asset.nil?
-        bond0               = asset.public_address
-        bond1               = asset.backend_address
-        aliasses            = asset.addresses.delete_if { |a| a.is_private? or a.address == bond0.address }
+      bond0               = asset.public_address
+      bond1               = asset.backend_address
+      aliasses            = asset.addresses.delete_if { |a| a.is_private? or a.address == bond0.address }
 
-        vars[:asset]        = asset
-        vars[:hostname]     = get_hostname(asset.hostname)
-        vars[:domain]       = get_domain(asset.hostname)
-        vars[:passwd_hash]  = generate_shadow_hash(SecureRandom.hex, vars[:initial_pass])
-        vars[:bond0]        = bond0
-        vars[:bond1]        = bond1
-        vars[:aliasses]     = aliasses
-      end
+      vars[:asset]        = asset
+      vars[:hostname]     = get_hostname(asset.hostname)
+      vars[:domain]       = get_domain(asset.hostname)
+      vars[:passwd_hash]  = generate_shadow_hash(SecureRandom.hex, vars[:initial_pass])
+      vars[:bond0]        = bond0
+      vars[:bond1]        = bond1
+      vars[:aliasses]     = aliasses
   
       erb :preseed, :locals => vars, :content_type => 'text/plain;charset=utf-8'
+    rescue => e
+      puts "Something went wrong."
+      puts e.message
+      puts e.backtrace.inspect
+    end
+  end
+end
+
+get '/postinstall/:tag' do
+  tag   = URI.unescape(params[:tag])
+  asset = client.get(tag)
+
+  if asset.nil?
+    vars[:message] = "Asset not found"
+    
+    erb :error, :locals => vars, :content_type => 'text/plain;charset=utf-8'
+  else
+    begin
+      vars[:collins]      = client
+
+      bond0               = asset.public_address
+      bond1               = asset.backend_address
+      aliasses            = asset.addresses.delete_if { |a| a.is_private? or a.address == bond0.address }
+
+      vars[:asset]        = asset
+      vars[:hostname]     = get_hostname(asset.hostname)
+      vars[:domain]       = get_domain(asset.hostname)
+      vars[:passwd_hash]  = generate_shadow_hash(SecureRandom.hex, vars[:initial_pass])
+      vars[:bond0]        = bond0
+      vars[:bond1]        = bond1
+      vars[:aliasses]     = aliasses
+  
+      erb :postinstall, :locals => vars, :content_type => 'text/plain;charset=utf-8'
     rescue => e
       puts "Something went wrong."
       puts e.message

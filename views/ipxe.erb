@@ -28,7 +28,7 @@ boot
 
 :provision
 initrd <%= ubuntu_mirror %>/dists/trusty-updates/main/installer-amd64/current/images/netboot/ubuntu-installer/amd64/initrd.gz
-kernel <%= ubuntu_mirror %>/dists/trusty-updates/main/installer-amd64/current/images/netboot/ubuntu-installer/amd64/linux -- url=<%= baseurl %>/preseed/${mac} ip=dhcp interface=${mac} locale=en_US.UTF-8 console-keymaps-at/keymap=us debian-installer/country=us hostname=<%= hostname %> domain=<%= domain %> biosdevname=0 console=tty0 console=ttyS1,115200
+kernel <%= ubuntu_mirror %>/dists/trusty-updates/main/installer-amd64/current/images/netboot/ubuntu-installer/amd64/linux -- url=<%= baseurl %>/preseed/${mac} ip=dhcp interface=${mac} locale=en_US.UTF-8 console-setup/layoutcode=us console-keymaps-at/keymap=us debian-installer/country=us hostname=<%= hostname %> domain=<%= domain %> biosdevname=0 console=tty0 console=ttyS1,115200
 boot
 
 # Avoid redownloading initrd and kernel repeatedly

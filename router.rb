@@ -4,6 +4,9 @@ require 'uri'
 require 'yaml'
 require 'tilt/erb'
 
+vars   = YAML.load_file 'config.yml'
+client = Collins::Authenticator.setup_client
+
 def provision? (asset)
   asset.status == "Provisioning"
 end
@@ -36,8 +39,6 @@ end
 
 get '/pxe/:mac' do
   mac             = URI.unescape(params[:mac])
-  vars            = YAML.load_file 'config.yml'
-  client          = Collins::Authenticator.setup_client
   asset           = client.find({:mac_address => mac, :details => true, :size => 1}).first
   vars[:asset]    = asset unless asset.nil?
 
@@ -67,10 +68,8 @@ end
 
 get '/kickstart/:mac' do
   mac             = URI.unescape(params[:mac])
-  vars            = YAML.load_file 'config.yml'
-  client          = Collins::Authenticator.setup_client
   asset           = client.find({:mac_address => mac, :details => true, :size => 1}).first
-  
+
   if asset.nil?
     vars[:message] = "Asset not found"
     
@@ -93,6 +92,40 @@ get '/kickstart/:mac' do
       end
   
       erb :kickstart, :locals => vars, :content_type => 'text/plain;charset=utf-8'
+    rescue => e
+      puts "Something went wrong."
+      puts e.message
+      puts e.backtrace.inspect
+    end
+  end
+end
+
+get '/preseed/:mac' do
+  mac             = URI.unescape(params[:mac])
+  asset           = client.find({:mac_address => mac, :details => true, :size => 1}).first
+
+  if asset.nil?
+    vars[:message] = "Asset not found"
+    
+    erb :error, :locals => vars, :content_type => 'text/plain;charset=utf-8'
+  else
+    begin
+      vars[:collins]  = client unless client.nil?
+
+      if not asset.nil?
+        bond0           = asset.public_address
+        bond1           = asset.backend_address
+        aliasses        = asset.addresses.delete_if { |a| a.is_private? or a.address == bond0.address }
+
+        vars[:asset]    = asset
+        vars[:hostname] = get_hostname(asset.hostname)
+        vars[:domain]   = get_domain(asset.hostname)
+        vars[:bond0]    = bond0
+        vars[:bond1]    = bond1
+        vars[:aliasses] = aliasses
+      end
+  
+      erb :preseed, :locals => vars, :content_type => 'text/plain;charset=utf-8'
     rescue => e
       puts "Something went wrong."
       puts e.message

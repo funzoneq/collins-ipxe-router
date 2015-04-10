@@ -91,7 +91,7 @@ get '/kickstart/:mac' do
         vars[:asset]        = asset
         vars[:hostname]     = get_hostname(asset.hostname)
         vars[:domain]       = get_domain(asset.hostname)
-        vars[:passwd_hash]  = generate_shadow_hash(SecureRandom.hex, passwd)
+        vars[:passwd_hash]  = generate_shadow_hash(SecureRandom.hex, vars[:initial_pass])
         vars[:bond0]        = bond0
         vars[:bond1]        = bond1
         vars[:aliasses]     = aliasses
@@ -126,7 +126,7 @@ get '/preseed/:mac' do
         vars[:asset]        = asset
         vars[:hostname]     = get_hostname(asset.hostname)
         vars[:domain]       = get_domain(asset.hostname)
-        vars[:passwd_hash]  = generate_shadow_hash(SecureRandom.hex, passwd)
+        vars[:passwd_hash]  = generate_shadow_hash(SecureRandom.hex, vars[:initial_pass])
         vars[:bond0]        = bond0
         vars[:bond1]        = bond1
         vars[:aliasses]     = aliasses

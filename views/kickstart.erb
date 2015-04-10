@@ -86,6 +86,21 @@ dmidecode
 ifenslave-2.6
 ethtool
 
+<% if asset.nodeclass == 'edge' %>
+%pre --interpreter=/bin/bash
+dd if=/dev/zero of=/dev/sdb bs=512 count=1
+dd if=/dev/zero of=/dev/sdc bs=512 count=1
+
+parted -s /dev/sdb mklabel gpt
+parted -s /dev/sdb mkpart primary ext4 0 -1
+mkfs.ext4 /dev/sdb1
+
+parted -s /dev/sdc mklabel gpt
+parted -s /dev/sdc mkpart primary xfs 0 -1
+mkfs.xfs /dev/sdc1
+%end
+<% end %>
+
 %post --interpreter=/bin/bash
 
 # This is the trick — automatically switch to 6th console

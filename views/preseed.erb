@@ -88,7 +88,7 @@ d-i partman-partitioning/confirm_copy boolean true
 d-i partman/confirm_new_label boolean true
 
 ### Base system installation
-d-i base-installer/kernel/image string linux-image-amd64
+d-i base-installer/kernel/override-image string linux-server
 dash dash/sh boolean false
 
 ### Account setup

@@ -89,7 +89,7 @@ d-i partman/confirm_new_label boolean true
 
 ### Base system installation
 d-i base-installer/kernel/image string linux-image-amd64
-d-i dash/sh boolean false
+dash dash/sh boolean false
 
 ### Account setup
 d-i passwd/user-fullname string <%= initial_fullname %>

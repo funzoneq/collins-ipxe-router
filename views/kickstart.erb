@@ -51,11 +51,7 @@ bootloader --location=mbr
 part swap       --size 16384
 part /          --fstype ext4 --size 1 --grow --asprimary
 part /boot      --fstype ext4 --size 512 --asprimary
-part /tmp       --fstype ext4 --size 5120 --fsoptions="nodev,noexec,nosuid"
-<% if asset.nodeclass == 'edge' %>
-part /var/log   --fstype ext4 --size=1024 --ondisk=sdb --grow
-part /cache     --fstype ext4 --size=1024 --ondisk=sdc --grow
-<% end %>
+part /tmp       --fstype ext4 --size 5120
 
 #System authorization infomation
 auth  --useshadow  --enablemd5

@@ -89,8 +89,7 @@ d-i base-installer/kernel/image string linux-image-amd64
 ### Account setup
 d-i passwd/user-fullname string <%= initial_fullname %>
 d-i passwd/username string <%= initial_user %>
-d-i passwd/user-password password <%= initial_pass %>
-d-i passwd/user-password-again password <%= initial_pass %>
+d-i passwd/user-password-crypted password <%= passwd_hash %>
 d-i user-setup/encrypt-home boolean false
 
 ### Apt setup

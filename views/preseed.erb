@@ -1,19 +1,19 @@
-#### Contents of the preconfiguration file (for squeeze)
-### Localization
-d-i debian-installer/locale string en_US
-d-i console-setup/ask_detect boolean false
+### Language setting
+d-i debian-installer/language string en
+d-i debian-installer/country string US
+d-i debian-installer/locale string en_US.UTF-8
+d-i localechooser/supported-locales en_US.UTF-8
+ 
+### Keyboard setting
 d-i keyboard-configuration/layoutcode string us
+d-i keyboard-configuration/variantcode string
 
 ### Network configuration
-# netcfg will choose an interface that has link if possible. This makes it
-# skip displaying a list if there is more than one interface.
 d-i netcfg/choose_interface select auto
 d-i netcfg/get_hostname string <%= hostname %>
 d-i netcfg/get_domain string <%= domain %>
 
 ### Mirror settings
-# If you select ftp, the mirror/country string does not need to be set.
-#d-i mirror/protocol string ftp
 d-i mirror/country string manual
 d-i mirror/http/hostname string mirror.nl.leaseweb.net
 d-i mirror/http/directory string /ubuntu
@@ -83,6 +83,9 @@ d-i partman/choose_partition select finish
 d-i partman/confirm boolean true
 d-i partman/confirm_nooverwrite boolean true
 
+### Base system installation
+d-i base-installer/kernel/image string linux-image-amd64
+
 ### Account setup
 d-i passwd/user-fullname string <%= initial_fullname %>
 d-i passwd/username string <%= initial_user %>
@@ -104,10 +107,6 @@ d-i debian-installer/add-kernel-opts string biosdevname=0 console=tty0 console=t
 ### Finishing up the installation
 d-i finish-install/keep-consoles boolean true
 d-i finish-install/reboot_in_progress note
-
-xserver-xorg xserver-xorg/autodetect_monitor boolean true
-xserver-xorg xserver-xorg/config/monitor/selection-method select medium
-xserver-xorg xserver-xorg/config/monitor/mode-list select 1024x768 @ 60 Hz
 
 #### Advanced options
 #d-i preseed/late_command string apt-install zsh; in-target chsh -s /bin/zsh

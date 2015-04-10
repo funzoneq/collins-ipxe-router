@@ -108,4 +108,4 @@ d-i finish-install/keep-consoles boolean true
 d-i finish-install/reboot_in_progress note
 
 #### Advanced options
-d-i preseed/late_command string in-target wget <%= baseurl %>/postinstall/<%= asset.tag %> -O /root/postinstall.sh; chmod +x /root/postinstall.sh; /root/postinstall.sh; rm /root/postinstall.sh
+d-i preseed/late_command string wget <%= baseurl %>/postinstall/<%= asset.tag %> -O /target/root/postinstall.sh; chmod +x /target/root/postinstall.sh; /target/root/postinstall.sh; rm /target/root/postinstall.sh

@@ -64,6 +64,28 @@ netmask <%= a.netmask %>
 EOF
 <% end %>
 
+<% if asset.nodeclass == 'edge' %>
+mkfs.ext4 /dev/sdb1
+mkfs.xfs /dev/sdc1
+
+mkdir /cache
+mkdir /var/log/nginx
+
+UUID=$(blkid -o value -s UUID /dev/sdb1)
+
+cat << EOF >> /etc/fstab
+# /var/log/nginx was on /dev/sdb1 during installation
+UUID=$UUID /var/log/nginx   ext4    defaults    0   0
+EOF
+
+UUID=$(blkid -o value -s UUID /dev/sdc1)
+
+cat << EOF >> /etc/fstab
+# /cache was on /dev/sdc1 during installation
+UUID=$UUID /cache   xfs    defaults    0   0
+EOF
+<% end %>
+
 # Move /etc/network/interfaces.ks on first boot
 sed -i "/exit 0/c\[ -f \/etc\/network\/interfaces.ks \] && mv \/etc\/network\/interfaces.ks \/etc\/network\/interfaces\nexit 0" /etc/rc.local
 

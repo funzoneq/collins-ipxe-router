@@ -39,12 +39,12 @@ d-i partman/choose_label string gpt
 d-i partman/default_label string gpt
 d-i partman-partitioning/choose_label select gpt
 
-d-i partman-auto/expert_recipe string                         \
-      boot-root ::                                            \
-              1 1 1 free                                      \
+d-i partman-auto/expert_recipe string edge-root ::            \
+              32 32 32 free                                   \
+                      $gptonly{ }                             \
                       $primary{ }                             \
+                      $bios_boot{ }                           \
                       method{ biosgrub }                      \
-                      $iflabel{ gpt }                         \
                       device { /dev/sda }                     \
               .                                               \
               40 50 100 ext4                                  \
@@ -52,16 +52,18 @@ d-i partman-auto/expert_recipe string                         \
                       method{ format } format{ }              \
                       use_filesystem{ } filesystem{ ext4 }    \
                       mountpoint{ /boot }                     \
-              .                                               \
-              500 10000 1000000000 ext4                       \
-                      method{ format } format{ }              \
-                      use_filesystem{ } filesystem{ ext4 }    \
-                      mountpoint{ / }                         \
+                      device { /dev/sda }                     \
               .                                               \
               64 512 100% linux-swap                          \
                       method{ swap } format{ }                \
               .                                               \
-              200000 200000 -1 ext4                           \
+              500 10000 -1 ext4                               \
+                      method{ format } format{ }              \
+                      use_filesystem{ } filesystem{ ext4 }    \
+                      mountpoint{ / }                         \
+                      device { /dev/sda }                     \
+              .                                               \
+              500 501 -1 ext4                                 \
                       $primary{ }                             \
                       method{ format } format{ }              \
                       $iflabel{ gpt }                         \
@@ -69,7 +71,7 @@ d-i partman-auto/expert_recipe string                         \
                       mountpoint{ /var/log }                  \
                       device { /dev/sdb }                     \
               .                                               \
-              200000 200000 -1 xfs                            \
+              500 5001 -1 xfs                                 \
                       $primary{ }                             \
                       method{ format } format{ }              \
                       $iflabel{ gpt }                         \
@@ -78,10 +80,12 @@ d-i partman-auto/expert_recipe string                         \
                       device { /dev/sdc }                     \
               . 
 
-d-i partman-partitioning/confirm_write_new_label boolean true
-d-i partman/choose_partition select finish
+
+d-i partman/confirm_write_new_label boolean true
+d-i partman/choose_partition select Finish partitioning and write changes to disk
 d-i partman/confirm boolean true
-d-i partman/confirm_nooverwrite boolean true
+d-i partman-partitioning/confirm_copy boolean true
+d-i partman/confirm_new_label boolean true
 
 ### Base system installation
 d-i base-installer/kernel/image string linux-image-amd64

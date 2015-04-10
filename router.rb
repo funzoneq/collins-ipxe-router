@@ -3,6 +3,7 @@ require 'collins_auth'
 require 'uri'
 require 'yaml'
 require 'tilt/erb'
+require 'securerandom'
 
 vars   = YAML.load_file 'config.yml'
 client = Collins::Authenticator.setup_client
@@ -35,6 +36,10 @@ def get_domain (hostname)
   else
     'example.com'
   end
+end
+
+def generate_shadow_hash (salt, passwd)
+  passwd.crypt('$6$' + salt);
 end
 
 get '/pxe/:mac' do
@@ -79,16 +84,17 @@ get '/kickstart/:mac' do
       vars[:collins]  = client unless client.nil?
 
       if not asset.nil?
-        bond0           = asset.public_address
-        bond1           = asset.backend_address
-        aliasses        = asset.addresses.delete_if { |a| a.is_private? or a.address == bond0.address }
+        bond0               = asset.public_address
+        bond1               = asset.backend_address
+        aliasses            = asset.addresses.delete_if { |a| a.is_private? or a.address == bond0.address }
 
-        vars[:asset]    = asset
-        vars[:hostname] = get_hostname(asset.hostname)
-        vars[:domain]   = get_domain(asset.hostname)
-        vars[:bond0]    = bond0
-        vars[:bond1]    = bond1
-        vars[:aliasses] = aliasses
+        vars[:asset]        = asset
+        vars[:hostname]     = get_hostname(asset.hostname)
+        vars[:domain]       = get_domain(asset.hostname)
+        vars[:passwd_hash]  = generate_shadow_hash(SecureRandom.hex, passwd)
+        vars[:bond0]        = bond0
+        vars[:bond1]        = bond1
+        vars[:aliasses]     = aliasses
       end
   
       erb :kickstart, :locals => vars, :content_type => 'text/plain;charset=utf-8'
@@ -113,16 +119,17 @@ get '/preseed/:mac' do
       vars[:collins]  = client unless client.nil?
 
       if not asset.nil?
-        bond0           = asset.public_address
-        bond1           = asset.backend_address
-        aliasses        = asset.addresses.delete_if { |a| a.is_private? or a.address == bond0.address }
+        bond0               = asset.public_address
+        bond1               = asset.backend_address
+        aliasses            = asset.addresses.delete_if { |a| a.is_private? or a.address == bond0.address }
 
-        vars[:asset]    = asset
-        vars[:hostname] = get_hostname(asset.hostname)
-        vars[:domain]   = get_domain(asset.hostname)
-        vars[:bond0]    = bond0
-        vars[:bond1]    = bond1
-        vars[:aliasses] = aliasses
+        vars[:asset]        = asset
+        vars[:hostname]     = get_hostname(asset.hostname)
+        vars[:domain]       = get_domain(asset.hostname)
+        vars[:passwd_hash]  = generate_shadow_hash(SecureRandom.hex, passwd)
+        vars[:bond0]        = bond0
+        vars[:bond1]        = bond1
+        vars[:aliasses]     = aliasses
       end
   
       erb :preseed, :locals => vars, :content_type => 'text/plain;charset=utf-8'

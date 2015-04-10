@@ -1,5 +1,5 @@
 ### Locale sets language and country.
-d-i debian-installer/locale string en_US
+d-i debian-installer/locale select en_US
  
 ### Keyboard selection.
 d-i console-setup/ask_detect boolean false
@@ -26,7 +26,7 @@ d-i clock-setup/ntp boolean true
 
 ### Partitioning
 d-i partman-auto/disk string /dev/sda /dev/sdb /dev/sdc
-d-i partman-auto/method string regular
+
 d-i partman-lvm/device_remove_lvm boolean true
 d-i partman-md/device_remove_md boolean true
 d-i partman-lvm/confirm boolean true
@@ -85,6 +85,7 @@ d-i partman/confirm_nooverwrite boolean true
 
 ### Base system installation
 d-i base-installer/kernel/image string linux-image-amd64
+d-i dash/sh boolean false
 
 ### Account setup
 d-i passwd/user-fullname string <%= initial_fullname %>
@@ -94,7 +95,7 @@ d-i user-setup/encrypt-home boolean false
 
 ### Apt setup
 tasksel tasksel/first multiselect minimal
-d-i pkgsel/include string openssh-server
+d-i pkgsel/include string openssh-server curl
 d-i pkgsel/upgrade select safe-upgrade
 d-i pkgsel/update-policy select unattended-upgrades
 
@@ -112,4 +113,4 @@ d-i preseed/late_command string \
 in-target wget <%= baseurl %>/postinstall/<%= asset.tag %> -O /root/postinstall.sh; \
 in-target chmod +x /root/postinstall.sh; \
 in-target /root/postinstall.sh; \
-in-target rm /target/root/postinstall.sh
+in-target rm /root/postinstall.sh

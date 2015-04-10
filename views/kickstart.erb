@@ -84,6 +84,10 @@ ethtool
 
 <% if asset.nodeclass == 'edge' %>
 %pre --interpreter=/bin/bash
+# This is the trick — automatically switch to 6th console
+exec < /dev/tty6 > /dev/tty6 2> /dev/tty6
+chvt 6
+
 dd if=/dev/zero of=/dev/sdb bs=512 count=1
 dd if=/dev/zero of=/dev/sdc bs=512 count=1
 
@@ -94,6 +98,10 @@ mkfs.ext4 /dev/sdb1
 parted -s /dev/sdc mklabel gpt
 parted -s /dev/sdc mkpart primary xfs 0 -1
 mkfs.xfs /dev/sdc1
+
+# Then switch back to Anaconda on the first console
+chvt 1
+exec < /dev/tty1 > /dev/tty1 2> /dev/tty1
 %end
 <% end %>
 

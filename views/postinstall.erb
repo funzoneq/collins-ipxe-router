@@ -27,6 +27,7 @@ auto bond1
 iface bond1 inet static
 address <%= bond1.address %>
 netmask  <%= bond1.netmask %>
+slaves eth4 eth5
 bond-mode 4
 bond_miimon 100
 bond_downdelay 200
@@ -42,6 +43,7 @@ address <%= bond0.address %>
 netmask <%= bond0.netmask %>
 gateway <%= bond0.gateway %>
 dns-nameservers <%= recursive_dns.join(" ") %>
+slaves eth2 eth3
 bond-mode 4
 bond_miimon 100
 bond_downdelay 200

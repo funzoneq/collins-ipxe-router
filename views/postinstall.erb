@@ -1,20 +1,5 @@
 #!/bin/sh
 
-# Stupid installer overwrites /etc/network/interfaces
-cat << EOF > /etc/network/interfaces
-# This file describes the network interfaces available on your system
-# and how to activate them. For more information, see interfaces(5).
- 
-# The loopback network interface
-auto lo
-iface lo inet loopback
-
-source /etc/network/interfaces.d/*.cfg
-EOF
-
-# Chroot into the installation machine
-chroot /target
-
 echo "alias netdev-bond0 bonding" > /etc/modprobe.d/bonding.conf
 echo "alias netdev-bond1 bonding" >> /etc/modprobe.d/bonding.conf
 
@@ -102,6 +87,3 @@ EOF
 
 # Update collins status to Provisioned cause we are done
 /usr/bin/curl --basic -H "Accept: text/plain" -u '<%= collins.username %>:<%= collins.password %>' -d 'status=Provisioned' -d 'reason=Kickstarted' -d 'state=RUNNING' <%= collins.host %>/api/asset/<%= asset.tag %>/status
-
-# End the chroot
-exit

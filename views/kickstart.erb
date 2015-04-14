@@ -85,6 +85,7 @@ xfsprogs
 
 <% if asset.nodeclass == 'edge' %>
 %pre --interpreter=/bin/bash
+
 # This is the trick — automatically switch to 6th console
 exec < /dev/tty6 > /dev/tty6 2> /dev/tty6
 chvt 6
@@ -111,6 +112,7 @@ EOF
 # Then switch back to Anaconda on the first console
 chvt 1
 exec < /dev/tty1 > /dev/tty1 2> /dev/tty1
+
 %end
 <% end %>
 
@@ -120,10 +122,17 @@ exec < /dev/tty1 > /dev/tty1 2> /dev/tty1
 exec < /dev/tty6 > /dev/tty6 2> /dev/tty6
 chvt 6
 
-wget <%= baseurl %>/postinstall/<%= asset.tag %> -O /target/root/postinstall.sh
-chmod +x /target/root/postinstall.sh
-/target/root/postinstall.sh
-rm /target/root/postinstall.sh
+# Stupid installer overwrites /etc/network/interfaces
+cat << EOF > /etc/network/interfaces
+# This file describes the network interfaces available on your system
+# and how to activate them. For more information, see interfaces(5).
+ 
+# The loopback network interface
+auto lo
+iface lo inet loopback
+
+source /etc/network/interfaces.d/*.cfg
+EOF
 
 # We can break into a shell prompt for debugging
 # /bin/sh
@@ -132,3 +141,20 @@ rm /target/root/postinstall.sh
 chvt 1
 exec < /dev/tty1 > /dev/tty1 2> /dev/tty1
 
+%end
+
+%post --interpreter=/bin/bash
+
+wget <%= baseurl %>/postinstall/<%= asset.tag %> -O /root/postinstall.sh
+chmod +x /root/postinstall.sh
+/root/postinstall.sh
+rm /root/postinstall.sh
+
+# We can break into a shell prompt for debugging
+# /bin/sh
+
+# Then switch back to Anaconda on the first console
+chvt 1
+exec < /dev/tty1 > /dev/tty1 2> /dev/tty1
+
+%end

@@ -120,10 +120,10 @@ exec < /dev/tty1 > /dev/tty1 2> /dev/tty1
 exec < /dev/tty6 > /dev/tty6 2> /dev/tty6
 chvt 6
 
-wget <%= baseurl %>/postinstall/<%= asset.tag %> -O /root/postinstall.sh
-chmod +x /root/postinstall.sh
-/root/postinstall.sh
-rm /root/postinstall.sh
+wget <%= baseurl %>/postinstall/<%= asset.tag %> -O /target/root/postinstall.sh
+chmod +x /target/root/postinstall.sh
+/target/root/postinstall.sh
+rm /target/root/postinstall.sh
 
 # We can break into a shell prompt for debugging
 /bin/sh

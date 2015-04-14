@@ -102,3 +102,6 @@ EOF
 
 # Update collins status to Provisioned cause we are done
 /usr/bin/curl --basic -H "Accept: text/plain" -u '<%= collins.username %>:<%= collins.password %>' -d 'status=Provisioned' -d 'reason=Kickstarted' -d 'state=RUNNING' <%= collins.host %>/api/asset/<%= asset.tag %>/status
+
+# End the chroot
+exit

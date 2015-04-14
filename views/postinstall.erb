@@ -1,12 +1,12 @@
-#!/bin/sh
+#!/bin/bash
 
 echo "alias netdev-bond0 bonding" > /etc/modprobe.d/bonding.conf
 echo "alias netdev-bond1 bonding" >> /etc/modprobe.d/bonding.conf
 
 for INF in $(ls /sys/class/net/|egrep -v 'lo|bond|eth0|eth1'); do
-if [ "$INF" == "eth2" ]; then
+if [[ $INF == eth2 ]]; then
     BOND=bond0
-elif [ "$INF" == "eth3" ]; then
+elif [[ $INF == eth3 ]]; then
     BOND=bond0
 else
     BOND=bond1

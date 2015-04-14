@@ -114,7 +114,7 @@ exec < /dev/tty1 > /dev/tty1 2> /dev/tty1
 %end
 <% end %>
 
-%post --interpreter=/bin/bash
+%post --interpreter=/bin/bash --nochroot
 
 # This is the trick — automatically switch to 6th console
 exec < /dev/tty6 > /dev/tty6 2> /dev/tty6

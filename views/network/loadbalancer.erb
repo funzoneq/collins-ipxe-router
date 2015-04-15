@@ -1,0 +1,62 @@
+echo "alias netdev-bond0 bonding" > /etc/modprobe.d/bonding.conf
+echo "alias netdev-bond1 bonding" >> /etc/modprobe.d/bonding.conf
+
+for INF in $(ls /sys/class/net/|egrep -v 'lo|bond|eth0|eth1'); do
+if [[ $INF == eth2 ]]; then
+    BOND=bond0
+elif [[ $INF == eth3 ]]; then
+    BOND=bond0
+else
+    BOND=bond1
+fi
+
+cat << EOF > /etc/network/interfaces.d/$INF.cfg
+auto $INF
+iface $INF inet manual
+bond-master $BOND
+EOF
+done
+
+cat << EOF > /etc/network/interfaces.d/bond1.cfg
+auto bond1
+iface bond1 inet static
+address <%= bond1.address %>
+netmask  <%= bond1.netmask %>
+slaves eth4 eth5
+bond-mode 4
+bond_miimon 100
+bond_downdelay 200
+bond_updelay 200
+bond_xmit_hash_policy layer2+3
+bond_lacp_rate slow
+EOF
+
+cat << EOF > /etc/network/interfaces.d/bond0.cfg
+auto bond0
+iface bond0 inet static
+address <%= bond0.address %>
+netmask <%= bond0.netmask %>
+gateway <%= bond0.gateway %>
+dns-nameservers <%= recursive_dns.join(" ") %>
+slaves eth2 eth3
+bond-mode 4
+bond_miimon 100
+bond_downdelay 200
+bond_updelay 200
+bond_xmit_hash_policy layer2+3
+bond_lacp_rate slow
+
+#iface bond0 inet6 static
+#address <%= ipv6_prefix %><%= bond0.address.split(".")[3] %>
+#netmask 64
+#gateway <%= ipv6_prefix %>1
+EOF
+
+<% aliasses.each_with_index do |a,k| %>
+cat << EOF > /etc/network/interfaces.d/bond0:<%= k %>.cfg
+auto bond0:<%= k %>
+iface bond0:<%= k %> inet static
+address <%= a.address %>
+netmask <%= a.netmask %>
+EOF
+<% end %>

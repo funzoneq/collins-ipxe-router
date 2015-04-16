@@ -27,5 +27,21 @@ UUID=$UUID /cache   ext4    defaults    0   0
 EOF
 <% end %>
 
+mkdir /root/.ssh/
+chmod 700 /root/.ssh/
+
+cat << EOF > /root/.ssh/authorized_keys
+from="85.17.150.50" ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAwgNKXVhYa+Ospd1XDKL6Z6+TyOaReybQkv6xh348n0Nhv9Um20m+14nrLtA24aAAW2AtS50weQjmkMqZBPClg67LtTZXbxG74h7FGw4Lm0o3dvcw6GcjijyOgQZYsAXYcagI+1fQg0UfaIyvATgHPJpM6zfa6iJm8/aZ0cjo3ocKBJ9qWRmjFocDXD7cQzCjbUKQ9qLrcLm2w7B6cKoQMIQesnS/rxNUnIOqqTi1lPpEb2x6Y4q99whqUrwSrE0nooJDR35EOu3HqZUSReTir9gFiQqEyNDIoSr/MmQIxV4tIFcZ+nPlGhkv1we79wpvTN9Dg9lawhyUKcS3VP256w== LeaseWeb SSH server
+from="62.212.64.100" ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAzn0qZ4VwbE+OI8hN1fwc7lFpJkhoIR0oVyacos8M5wkWflMXqxEd8Zwv9lZEAqYSjHf3nBY6Z2jGAZzsubAb1T/9YP10iJXaTnKGhJUsHupOyXgE+9WHbpxi5dazWZB+5OHgvX0dJsBhCHZw6bsg6n454AAJWXILn0W6LcJVYfsWTnMfaZSBp5qOYoAixClf7G7+dJBGlp+btezCiGvRQPKu1qtmi9CdHxkheFAoQsyvARzyTrpeIwARSml0iB8KuNBks/uiMIrbquNUB2Y2YS+BpDijeD2M1GZWd0G/TWfpq6oRP2DCmEC48KTmgW3mYOKIx0sEGNgpG1ZXL7rSSw== root@cp
+from="95.211.215.105" ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDA81dApUkHy80z1D6fy2mKsQuz+wI2QLV8EmkzF2uT7OJSfLUrEv37INsarv92L2IPgdKhNrFZr+vZPLuiIIXt/hG2wTFYjGEj6IpSd9/1bd2Bev4Wl/3FGoaoIqOlmUg8gFVfvw2xZNrd2eWlaJU4Bl9G+OE3xHuCx1inS9yZOP86sJbJjotf4GVXFFZsWvoS5/Bh8xtIOeaR5xdAwIOaLU0ogCA1MJOpqxG6AOspxZRSRcENQTVcLfPrM/lG3S6A5QXT4EPQvfg275E/6pALiMrrwlYAWd++7fi6U8e1kKy2aS81SJqOV5MIj0eQE21AXG2uylIvsWMLbyJdWah9 root@util-nl002.leasewebcdn.com
+from="95.211.215.98" ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDdUWfXXZdFEkTnI6YdR2U25yVp86vDJZdEG6hmJ4P20l2IgPuyyhP1Tpsma1tKMXeBJaRW5ots8Dm3/47dQsBkrYqSxvWf8i9qbTKNon5N8ErxevcQGBnO8rGXmoF+sLoo6HVdzJrdZXOK4usM+lSZWSWHd3fZEMyo7Mkd677hcHTEivjLiEB8bnEQbUOotljWGSZehVsior9De5nN0+65UO0t7OJ0gt6xSMEa8ATYthS1JnfF26adPD0fy90Ky37q5/wcBUnYBbHKq2D6DNHtyo3UMckG3TjDqf0Tiq56yVTjZ07OoBfEcM80Mdw8AKHONVgFjJAkHg/kpabWjsit cdn@rawlog-nl001.leasewebcdn.com
+ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCo1HO+AtsjpV2yPcBiiuws75wwiG8bswKvOqdEsSncTUk1ffp/dVkaCMiXuXrpXGlR8Tr0bTMHQ6B6t2l9QxUUbSeRevoZy8IVXmuoa5KJkZVJvsI7P12TCakNnhOfq1aG7ec/njcqqyUCLPIIaEqPo7uoM5xmkau+5+kX/oOib2NvhXdz0HamuvkJdzyJltaI+En7DG9yjLW7SAPKzkKGdsaL161eSdpZ7ugyNnxAYbdNf3ftICkBJq3m40U0dtgZLk+VhRTY9aPfVh1Tp+vJTJ3ScaHBJnoRsrZbwrw60aqKfh8RC+OOIAWvg3Ar3os17n2O1bhOTKWeXHNg6ZUj a.vermeer@tech.leaseweb.com
+ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA1CWA9myr4CsyRAHz0s8htrM+ZDmw/88hTJA2F4T0lWQFN+OvfpBVbeY9tOKWLZCP9Ie4WVm8SY+8M5H/56tLXMTJN0leie7QXfc4CbiuiECA2DLu5KC8VSK6vyZ7J/T7s9hMKA42xW3NkZNMMatV3ViI/M5thghw+ByoRgNwBQt12Wk7uePHMV3fl1sE/6tPnHWLSAdlMqD3H6ui3GfPbhGXkWXmpuIMwgxGgqm31jxIk+TGXEyxXqWrr1Am+bGtQDS5pQK0TuYWLdy70T0ihbG/vixFppY+7w2b4S/lg8E+ZgkUbfI85iwVqp7bX/LWBI/z/9W2EsMF3ZDVMJOSEQ== root@cdn-util01001
+ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAvhlhG8h787vt9ryYQiiJVQU0BGbaTxL5rCsmpngCBEE2pLdi8JkT7w+qDGFhNH0OmolM+xhxdZGnnsNewYqk0NLuoHNu+ibjPW60tm1nPSwhAOi69TgqJdmaDfn41I8x9snbg/QY0OXLnRvc842AB0UPySdGTgAZSDxul5TMNTnPZ3m+Est18+O4iA4QDWTgby+pbmORNC5L63Dcc3A/DcGqCUu2tfiYsNtblLPCvcdUndZZCRuAOc+M1iLhEJmMk8Ql6ce+abncr8z/6kMkZfE5goDThD3/ee8hTGtdSJgl+fyauPOgS3gE9FCgiqDDsWtwOST/Bx8/rmVpO9NP3w== POL
+EOF
+
+chmod 600 /root/.ssh/authorized_keys
+chown root:root /root/.ssh/authorized_keys
+
 # Update collins status to Provisioned cause we are done
 /usr/bin/curl --basic -H "Accept: text/plain" -u '<%= collins.username %>:<%= collins.password %>' -d 'status=Provisioned' -d 'reason=Kickstarted' -d 'state=RUNNING' <%= collins.host %>/api/asset/<%= asset.tag %>/status

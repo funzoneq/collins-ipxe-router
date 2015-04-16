@@ -53,7 +53,8 @@ bond_lacp_rate slow
 EOF
 
 <% aliasses.each_with_index do |a,k| %>
-cat << EOF > /etc/network/interfaces.d/bond0:<%= k %>.cfg
+cat << EOF >> /etc/network/interfaces.d/bond0.cfg
+
 auto bond0:<%= k %>
 iface bond0:<%= k %> inet static
 address <%= a.address %>

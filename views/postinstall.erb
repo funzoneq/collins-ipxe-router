@@ -7,7 +7,7 @@ ERB.new(content).result(binding)
 
 <% if asset.nodeclass == 'edge' %>
 mkfs.ext4 /dev/sdb1
-mkfs.xfs /dev/sdc1
+mkfs.ext4 /dev/sdc1
 
 mkdir /cache
 mkdir /var/log/nginx
@@ -23,7 +23,7 @@ UUID=$(blkid -o value -s UUID /dev/sdc1)
 
 cat << EOF >> /etc/fstab
 # /cache was on /dev/sdc1 during installation
-UUID=$UUID /cache   xfs    defaults    0   0
+UUID=$UUID /cache   ext4    defaults    0   0
 EOF
 <% end %>
 

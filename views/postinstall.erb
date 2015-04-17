@@ -7,6 +7,15 @@ ERB.new(content).result(binding)
 %>
 
 <% if asset.nodeclass == 'edge' %>
+dd if=/dev/zero of=/dev/sdb bs=512 count=1
+dd if=/dev/zero of=/dev/sdc bs=512 count=1
+
+parted -s /dev/sdb mklabel gpt
+parted -s /dev/sdc mklabel gpt
+
+parted -s -a optimal /dev/sdb mkpart primary 0% 100%
+parted -s -a optimal /dev/sdc mkpart primary 0% 100%
+
 mkfs.ext4 /dev/sdb1
 mkfs.xfs -f /dev/sdc1
 

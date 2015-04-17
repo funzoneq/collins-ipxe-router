@@ -99,6 +99,8 @@ parted -s /dev/sdc mklabel gpt
 parted -s -a optimal /dev/sdb mkpart primary 0% 100%
 parted -s -a optimal /dev/sdc mkpart primary 0% 100%
 
+/bin/sh
+
 # Then switch back to Anaconda on the first console
 chvt 1
 exec < /dev/tty1 > /dev/tty1 2> /dev/tty1

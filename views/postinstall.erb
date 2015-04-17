@@ -1,11 +1,15 @@
 #!/bin/bash
 
+(
 <%= 
 content = File.read(File.expand_path("views/network/#{asset.nodeclass}.erb"))
 ERB.new(content).result(binding)
 %>
 
 <% if asset.nodeclass == 'edge' %>
+mkfs.ext4 /dev/sdb1
+mkfs.xfs -f /dev/sdc1
+
 mkdir /cache
 mkdir /var/log/nginx
 
@@ -20,7 +24,7 @@ UUID=$(blkid -o value -s UUID /dev/sdc1)
 
 cat << EOF >> /etc/fstab
 # /cache was on /dev/sdc1 during installation
-UUID=$UUID /cache   ext4    defaults    0   0
+UUID=$UUID /cache   xfs    defaults    0   0
 EOF
 <% end %>
 
@@ -42,3 +46,5 @@ chown root:root /root/.ssh/authorized_keys
 
 # Update collins status to Provisioned cause we are done
 /usr/bin/curl --basic -H "Accept: text/plain" -u '<%= collins.username %>:<%= collins.password %>' -d 'status=Provisioned' -d 'reason=Kickstarted' -d 'state=RUNNING' <%= collins.host %>/api/asset/<%= asset.tag %>/status
+
+) 2>&1 | /usr/bin/tee /var/log/post_install.log

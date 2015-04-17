@@ -81,6 +81,7 @@ lldpd
 dmidecode
 ifenslave-2.6
 ethtool
+xfsprogs
 
 <% if asset.nodeclass == 'edge' %>
 %pre --interpreter=/bin/bash
@@ -89,16 +90,14 @@ ethtool
 exec < /dev/tty6 > /dev/tty6 2> /dev/tty6
 chvt 6
 
-(
 dd if=/dev/zero of=/dev/sdb bs=512 count=1
 dd if=/dev/zero of=/dev/sdc bs=512 count=1
 
-parted -s -a optimal /dev/sdb mklabel gpt -- mkpart primary ext4 1 -1
-parted -s -a optimal /dev/sdc mklabel gpt -- mkpart primary ext4 1 -1
+parted -s /dev/sdb mklabel gpt
+parted -s /dev/sdc mklabel gpt
 
-mkfs.ext4 /dev/sdb1
-mkfs.ext4 /dev/sdc1
-) 2>&1 | /usr/bin/tee /var/log/pre_install.log
+parted -s -a optimal /dev/sdb mkpart primary 0% 100%
+parted -s -a optimal /dev/sdc mkpart primary 0% 100%
 
 # Then switch back to Anaconda on the first console
 chvt 1

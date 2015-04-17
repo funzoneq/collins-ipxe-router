@@ -89,6 +89,7 @@ ethtool
 exec < /dev/tty6 > /dev/tty6 2> /dev/tty6
 chvt 6
 
+(
 dd if=/dev/zero of=/dev/sdb bs=512 count=1
 dd if=/dev/zero of=/dev/sdc bs=512 count=1
 
@@ -97,6 +98,7 @@ parted -s -a optimal /dev/sdc mklabel gpt -- mkpart primary ext4 1 -1
 
 mkfs.ext4 /dev/sdb1
 mkfs.ext4 /dev/sdc1
+) 2>&1 | /usr/bin/tee /var/log/pre_install.log
 
 # Then switch back to Anaconda on the first console
 chvt 1

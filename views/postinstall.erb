@@ -6,9 +6,6 @@ ERB.new(content).result(binding)
 %>
 
 <% if asset.nodeclass == 'edge' %>
-mkfs.ext4 /dev/sdb1
-mkfs.ext4 /dev/sdc1
-
 mkdir /cache
 mkdir /var/log/nginx
 

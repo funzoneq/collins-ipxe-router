@@ -92,21 +92,11 @@ chvt 6
 dd if=/dev/zero of=/dev/sdb bs=512 count=1
 dd if=/dev/zero of=/dev/sdc bs=512 count=1
 
-cat <<EOF | sudo parted ---pretend-input-tty /dev/sdb
-mklabel gpt
-yes
-yes
-mkpart primary ext4 0% 100%
-quit
-EOF
+parted -s -a optimal /dev/sdb mklabel gpt -- mkpart primary ext4 1 -1
+parted -s -a optimal /dev/sdc mklabel gpt -- mkpart primary ext4 1 -1
 
-cat <<EOF | sudo parted ---pretend-input-tty /dev/sdc
-mklabel gpt
-yes
-yes
-mkpart primary ext4 0% 100%
-quit
-EOF
+mkfs.ext4 /dev/sdb1
+mkfs.ext4 /dev/sdc1
 
 # Then switch back to Anaconda on the first console
 chvt 1

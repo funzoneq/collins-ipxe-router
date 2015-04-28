@@ -48,7 +48,11 @@ bootloader --location=mbr
 <% end %>
 
 #Basic disk partition
+<% if asset.nodeclass == 'cache' %>
+part swap       --size 65536
+<% else %>
 part swap       --size 16384
+<% end %>
 part /          --fstype ext4 --size 1 --grow --asprimary
 part /boot      --fstype ext4 --size 512 --asprimary
 part /tmp       --fstype ext4 --size 5120

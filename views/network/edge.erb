@@ -37,7 +37,7 @@ bond_xmit_hash_policy layer2+3
 bond_lacp_rate slow
 
 #iface eth2 inet6 static
-#address <%= ipv6_prefix %><%= bond0.address.split(".")[3] %>
+#address <%= ipv6_address %>
 #netmask 64
-#gateway <%= ipv6_prefix %>1
+#gateway <%= ipv6_prefix %>:1
 EOF

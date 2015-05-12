@@ -53,7 +53,9 @@ EOF
 chmod 600 /root/.ssh/authorized_keys
 chown root:root /root/.ssh/authorized_keys
 
+# Fix the hostname
 echo <%= asset.hostname %> > /etc/hostname
+echo "127.0.1.1 <%= asset.hostname %> <%= hostname %>" >> /etc/hosts
 
 # Update collins status to Provisioned cause we are done
 /usr/bin/curl --basic -H "Accept: text/plain" -u '<%= collins.username %>:<%= collins.password %>' -d 'status=Provisioned' -d 'reason=Kickstarted' -d 'state=RUNNING' <%= collins.host %>/api/asset/<%= asset.tag %>/status

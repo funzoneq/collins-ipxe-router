@@ -52,18 +52,6 @@ def hostname_to_ipv6 (hostname)
   hostname[-3,3].to_i
 end
 
-def parse_rack_position (rack_position)
-  regexp = %r{ (?<DC> [\w]+)-(?<RACK> [\w]+)-(?<U> [\w]+) }x
-  match = regexp.match(rack_position)
-  Hash[ match.names.zip( match.captures ) ]
-end
-
-def get_ipv6_prefix (rack_position)
-  position = parse_rack_position(rack_position)
-  rack = asset.get("#{position['DC']}-#{position['RACK']}")
-  rack.get_attribute("IPV6_PREFIX")
-end
-
 def get_ipv6_address (prefix, nodeclass, hostname)
   type = get_ipv6_type(nodeclass)
   host = hostname_to_ipv6(hostname)
@@ -202,8 +190,8 @@ get '/postinstall/:tag' do
       vars[:bond0]        = bond0
       vars[:bond1]        = bond1
       vars[:aliasses]     = aliasses
-      vars[:ipv6_prefix]  = get_ipv6_prefix(asset.rack_position)
-      vars[:ipv6_address] = get_ipv6_address(vars[:ipv6_prefix], asset.nodeclass, vars[:hostname])
+      vars[:ipv6_prefix]  = asset.prefix
+      vars[:ipv6_address] = get_ipv6_address(asset.prefix, asset.nodeclass, vars[:hostname])
   
       erb :postinstall, :locals => vars, :content_type => 'text/plain;charset=utf-8'
     rescue => e

@@ -28,36 +28,6 @@ def get_hostname (hostname)
   end
 end
 
-def get_ipv6_type (nodeclass)
-  if nodeclass == "loadbalancer"
-    1
-  elsif nodeclass == "edge"
-    2
-  elsif nodeclass == "cache"
-    3
-  elsif nodeclass == "smallobj"
-    4
-  elsif nodeclass == "dns"
-    5
-  elsif nodeclass == "stats"
-    6
-  elsif nodeclass == "util"
-    7
-  else
-    99
-  end
-end
-
-def hostname_to_ipv6 (hostname)
-  hostname[-3,3].to_i
-end
-
-def get_ipv6_address (prefix, nodeclass, hostname)
-  type = get_ipv6_type(nodeclass)
-  host = hostname_to_ipv6(hostname)
-  "#{prefix}:#{type}:#{host}:1"
-end
-
 def get_domain (hostname)
   if not hostname.nil?  
     domain = hostname.split(".")
@@ -190,8 +160,6 @@ get '/postinstall/:tag' do
       vars[:bond0]        = bond0
       vars[:bond1]        = bond1
       vars[:aliasses]     = aliasses
-      vars[:ipv6_prefix]  = asset.prefix
-      vars[:ipv6_address] = get_ipv6_address(asset.prefix, asset.nodeclass, vars[:hostname])
   
       erb :postinstall, :locals => vars, :content_type => 'text/plain;charset=utf-8'
     rescue => e
